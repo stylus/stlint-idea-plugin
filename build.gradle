@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'org.edadeal'
-version '1.2.3'
+version '1.2.8'
 
 sourceCompatibility = 1.8
 
