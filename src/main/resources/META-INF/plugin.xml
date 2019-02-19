@@ -20,7 +20,7 @@
     <depends>org.jetbrains.plugins.stylus</depends>
 
     <extensions defaultExtensionNs="com.intellij">
-        <annotator language="Stylus" implementationClass="StylusAnnotator"/>
+        <externalAnnotator language="Stylus" implementationClass="StylusExternalAnnotator"/>
     </extensions>
 
     <actions>
