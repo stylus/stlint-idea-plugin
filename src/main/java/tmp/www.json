@@ -1,0 +1,25 @@
+[
+  {
+    "CONTEXT": {
+      "EDADEAL": {
+        "source": {
+          "EDADEAL_UI": {
+            "direct": {
+              "desktop": {
+                "under_wall": ["R-I-338751-1"],
+                "sidebar": ["R-I-338751-2"],
+                "under_offer_card": ["R-I-338751-3"],
+                "under_cashback_card": ["R-I-338751-4"]
+              },
+              "mobile":  {
+                "offers": ["R-I-338786-1"],
+                "footer": ["R-I-338786-2"]
+              }
+            }
+          }
+        }
+      }
+    },
+    "ExperimentID": 102825
+  }
+]

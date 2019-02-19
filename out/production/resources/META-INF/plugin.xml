@@ -1,0 +1,32 @@
+<idea-plugin>
+    <id>org.edadeal</id>
+    <name>Stylus Linter</name>
+    <vendor email="chupurnov@gmail.com" url="https://edadeal.ru">Yandex.Edadeal</vendor>
+    <category>Web</category>
+    <description><![CDATA[
+    Stylus Linter and Syntax Highligher</br>
+    <em>most HTML tags may be used</em>
+    ]]></description>
+
+    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
+         on how to target different products -->
+    <!-- uncomment to enable plugin in all products
+    <depends>com.intellij.modules.lang</depends>
+    -->
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>com.intellij.modules.lang</depends>
+    <depends optional="true">com.intellij.css</depends>
+    <depends>org.jetbrains.plugins.stylus</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <annotator language="STYL" implementationClass="StylusAnnotator"/>
+    </extensions>
+
+    <actions>
+        <group id="StylusLinter.SampleMenu" text="Greeting" description="Greeting menu">
+            <add-to-group group-id="MainMenu" anchor="last"/>
+            <action id="Myplugin.Textboxes" class="LintAction" text="Hello" description="Says hello"/>
+        </group>
+    </actions>
+</idea-plugin>
