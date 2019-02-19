@@ -12,6 +12,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 class TypeCheck {
     private static final Logger log = Logger.getInstance(TypeCheck.class);
 
@@ -53,6 +56,11 @@ class TypeCheck {
 
         final String path = vfile.getCanonicalPath();
         if (path == null) {
+            log.error("missing canonical path for " + file);
+            return noProblems;
+        }
+
+        if (!sisStylusFile(path)) {
             log.error("missing canonical path for " + file);
             return noProblems;
         }
@@ -138,6 +146,12 @@ class TypeCheck {
             log.info("Stylus inspector found errors " + errors);
             return errors;
         }
+    }
+
+    private static boolean isStylusFile(String path) {
+        Pattern p = Pattern.compile(".styl$");
+        Matcher m = p.matcher(path);
+        return m.matches();
     }
 
     private static int remapLine(int stylusLine, Document document) {
