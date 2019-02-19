@@ -60,7 +60,7 @@ class TypeCheck {
             return noProblems;
         }
 
-        if (!sisStylusFile(path)) {
+        if (!isStylusFile(path)) {
             log.error("missing canonical path for " + file);
             return noProblems;
         }
