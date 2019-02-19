@@ -28,8 +28,8 @@ class Output {
         //public String version;
     }
 
-    static @NotNull Response parse(@NotNull final String flowOutput) {
-        return gson.fromJson(flowOutput, Response.class);
+    static @NotNull Response parse(@NotNull final String stylusOutput) {
+        return gson.fromJson(stylusOutput, Response.class);
     }
 
 }

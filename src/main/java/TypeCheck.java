@@ -14,10 +14,12 @@ import java.util.Collections;
 
 class TypeCheck {
     private static final Logger log = Logger.getInstance(TypeCheck.class);
+
     private static final Collection<Error> noProblems = Collections.emptyList();
 
     static @NotNull Collection<Error> errors(@NotNull final PsiFile file) {
         final VirtualFile vfile = file.getVirtualFile();
+
         if (vfile == null) {
             log.info("Missing vfile for " + file);
             return noProblems;
@@ -34,9 +36,10 @@ class TypeCheck {
 
     static @NotNull Collection<Error> errors(PsiFile file, Document document) {
 
-        log.debug("Flow checkFile", file);
+        log.debug("Stylus Linter checkFile", file);
 
         final VirtualFile vfile = file.getVirtualFile();
+
         if (vfile == null) {
             log.error("missing vfile for " + file);
             return noProblems;
@@ -62,26 +65,21 @@ class TypeCheck {
 
         final String text = file.getText();
 
-        // skip files that flow itself would skip
-        if (!text.contains("@flow")) {
+        final String stylusOutput = stylusCheck(path, text);
+        log.debug("stylus output", stylusOutput);
+
+        if (stylusOutput.isEmpty()) {
             return noProblems;
         }
 
-        final String flowOutput = flowCheck(path, text);
-        log.debug("flow output", flowOutput);
-
-        if (flowOutput.isEmpty()) {
-            return noProblems;
-        }
-
-        final Output.Response response = Output.parse(flowOutput);
+        final Output.Response response = Output.parse(stylusOutput);
 
         if (response.passed) {
-            log.info("flow passed");
+            log.info("stylus passed");
             return noProblems;
         }
         if (response.errors == null) {
-            log.error("flow failed, but shows no errors");
+            log.error("stylus failed, but shows no errors");
             return noProblems;
         }
 
@@ -90,7 +88,7 @@ class TypeCheck {
         for (final Output.Error error: response.errors) {
             final ArrayList<Output.MessagePart> messageParts = error.message;
             if (messageParts == null || messageParts.size() == 0) {
-                log.error("flow missing message in error " + error);
+                log.error("stylus missing message in error " + error);
                 continue;
             }
 
@@ -113,7 +111,7 @@ class TypeCheck {
             }
 
             final String errorMessage = errorMessageBuilder.toString();
-            log.info("Flow found error: " + errorMessage);
+            log.info("Stylus found error: " + errorMessage);
 
             for (final Output.MessagePart part: error.message) {
                 if (part.path.isEmpty()) {
@@ -128,7 +126,7 @@ class TypeCheck {
                 final int lineStartOffset = document.getLineStartOffset(remapLine(part.line, document));
                 final int lineEndOffset = document.getLineStartOffset(remapLine(part.endline, document));
 
-                log.info("Flow error for file " + file + " at " + part.line + ":" + part.start + " to " + part.endline + ":" + part.end + " range " + TextRange.create(lineStartOffset + part.start - 1, lineEndOffset + part.end));
+                log.info("Stylus error for file " + file + " at " + part.line + ":" + part.start + " to " + part.endline + ":" + part.end + " range " + TextRange.create(lineStartOffset + part.start - 1, lineEndOffset + part.end));
 
                 errors.add(new Error(errorMessage, TextRange.create(lineStartOffset + part.start - 1, lineEndOffset + part.end)));
             }
@@ -137,38 +135,41 @@ class TypeCheck {
         if (errors.isEmpty()) {
             return noProblems;
         } else {
-            log.info("Flow inspector found errors " + errors);
+            log.info("Stylus inspector found errors " + errors);
             return errors;
         }
     }
 
-    private static int remapLine(int flowLine, Document document) {
-        final int lineIndex = flowLine - 1;
+    private static int remapLine(int stylusLine, Document document) {
+        final int lineIndex = stylusLine - 1;
         return Math.max(0, Math.min(lineIndex, document.getLineCount() - 1));
     }
 
     @NotNull
-    private static String flowCheck(@NotNull final String filePath, @NotNull final String text) {
+    private static String stylusCheck(@NotNull final String filePath, @NotNull final String text) {
 
         final File file = new File(filePath);
 
         final File workingDir = file.getParentFile();
-        log.debug("flowCheck working directory", workingDir);
+        log.debug("stylusCheck working directory", workingDir);
 
-        final String[] cmd = new String[] {Settings.readPath(),
-                "check-contents",
-                "--show-all-errors", "--json",
-                file.getName()};
+        final String[] cmd = new String[] {
+            Settings.readPath(),
+            "check-contents",
+            "--show-all-errors", "--json",
+            file.getName()
+        };
 
         final StringBuilder outBuilder = new StringBuilder();
         final StringBuilder errBuilder = new StringBuilder();
 
         final int exitCode = run(cmd, workingDir, outBuilder, errBuilder, text.getBytes());
-        log.debug("flow exited with code ", exitCode);
+        log.debug("stylus exited with code ", exitCode);
 
         final String output = outBuilder.toString();
+
         if (output.isEmpty()) {
-            log.error("flow output was empty.\nWorking directory: " + workingDir
+            log.error("stylus output was empty.\nWorking directory: " + workingDir
                     + "\nFile: " + filePath
                     + "\nCommand: " + Arrays.toString(cmd)
                     + "\nExit code: " + exitCode

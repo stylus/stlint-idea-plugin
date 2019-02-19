@@ -1,5 +1,5 @@
 <idea-plugin>
-  <version>1.0.7</version>
+  <version>1.1.1</version>
   <change-notes>
       Add change notes here.&lt;br&gt;
       &lt;em&gt;most HTML tags may be used&lt;/em&gt;</change-notes>
@@ -8,16 +8,16 @@
   <name>Stylus Linter</name>
   <vendor email="chupurnov@gmail.com" url="https://edadeal.ru">Yandex.Edadeal</vendor>
   <category>Web</category>
-  <description>
-    Stylus Linter and Syntax Highligher&lt;/br&gt;
-    &lt;em&gt;most HTML tags may be used&lt;/em&gt;
-    </description>
-  <depends>com.intellij.modules.platform</depends>
+  <description>Stylus Linter and Syntax Highligher use https://npmjs.net/stylus-linter</description>
+s
+
+      <depends>com.intellij.modules.platform</depends>
   <depends>com.intellij.modules.lang</depends>
   <depends optional="true">com.intellij.css</depends>
   <depends>org.jetbrains.plugins.stylus</depends>
   <extensions defaultExtensionNs="com.intellij">
-    <annotator language="Stylus" implementationClass="StylusAnnotator"/>
+    <externalAnnotator language="Stylus" implementationClass="StylusExternalAnnotator"/>
+    <applicationConfigurable instance="Settings"/>
   </extensions>
   <actions>
     <group id="StylusLinter.SampleMenu" text="Greeting" description="Greeting menu">

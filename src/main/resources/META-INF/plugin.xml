@@ -3,16 +3,7 @@
     <name>Stylus Linter</name>
     <vendor email="chupurnov@gmail.com" url="https://edadeal.ru">Yandex.Edadeal</vendor>
     <category>Web</category>
-    <description><![CDATA[
-    Stylus Linter and Syntax Highligher</br>
-    <em>most HTML tags may be used</em>
-    ]]></description>
-
-    <!-- please see http://www.jetbrains.org/intellij/sdk/docs/basics/getting_started/plugin_compatibility.html
-         on how to target different products -->
-    <!-- uncomment to enable plugin in all products
-    <depends>com.intellij.modules.lang</depends>
-    -->
+    <description>Stylus Linter and Syntax Highligher use https://npmjs.net/stylus-linter</description>s
 
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
@@ -21,6 +12,7 @@
 
     <extensions defaultExtensionNs="com.intellij">
         <externalAnnotator language="Stylus" implementationClass="StylusExternalAnnotator"/>
+        <applicationConfigurable instance="Settings" />
     </extensions>
 
     <actions>

@@ -65,7 +65,7 @@ public class Settings implements Configurable {
         }
     }
 
-    private static String KEY = "org.edadeal.flow.path";
+    private static String KEY = "org.edadeal.stylus.path";
     private static String DEFAULT = "/usr/local/bin/stylus-linter";
 
     private static void writePath(String path) {
