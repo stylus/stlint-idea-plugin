@@ -147,7 +147,7 @@ class TypeCheck {
         }
     }
 
-    private static boolean isStylusFile(String path) {
+    public static boolean isStylusFile(String path) {
         String extension = "";
 
         int i = path.lastIndexOf('.');

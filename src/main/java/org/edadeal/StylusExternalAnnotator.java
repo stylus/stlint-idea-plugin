@@ -9,8 +9,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.annotation.ExternalAnnotator;
-import org.jetbrains.plugins.stylus.psi.StylusFile;
-import org.jetbrains.plugins.stylus.StylusFileType;
 
 import java.util.Collection;
 
@@ -75,6 +73,6 @@ public class StylusExternalAnnotator extends ExternalAnnotator<StylusExternalAnn
         }
     }
     private static boolean isStylusFile(PsiFile file) {
-        return file instanceof StylusFile && file.getFileType().equals(StylusFileType.STYLUS);
+        return file.getFileType().getDefaultExtension().equals("styl");
     }
 }
