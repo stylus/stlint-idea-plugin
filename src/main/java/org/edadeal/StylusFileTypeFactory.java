@@ -8,6 +8,6 @@ public class StylusFileTypeFactory extends FileTypeFactory {
 
     @Override
     public void createFileTypes(@NotNull FileTypeConsumer fileTypeConsumer) {
-        fileTypeConsumer.consume(StylusFileType.INSTANCE, "styl");
+        fileTypeConsumer.consume(StylusLinterFileType.INSTANCE, "styl");
     }
 }

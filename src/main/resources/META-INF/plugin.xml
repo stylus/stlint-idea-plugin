@@ -11,6 +11,7 @@
     <depends>org.jetbrains.plugins.stylus</depends>
 
     <extensions defaultExtensionNs="com.intellij">
+        <fileTypeFactory implementation="org.edadeal.utils.StylusLinterConfigFileTypeFactory"/>
         <externalAnnotator language="Stylus" implementationClass="org.edadeal.StylusExternalAnnotator"/>
         <applicationConfigurable instance="org.edadeal.Settings" />
     </extensions>

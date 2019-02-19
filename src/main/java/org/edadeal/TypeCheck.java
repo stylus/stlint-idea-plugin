@@ -11,7 +11,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -60,7 +59,7 @@ class TypeCheck {
             return noProblems;
         }
 
-        if (true || !isStylusFile(path)) {
+        if (!isStylusFile(path)) {
             return noProblems;
         }
 
@@ -85,6 +84,7 @@ class TypeCheck {
             log.info("stylus passed");
             return noProblems;
         }
+
         if (response.errors == null) {
             log.error("stylus failed, but shows no errors");
             return noProblems;
@@ -147,7 +147,7 @@ class TypeCheck {
         }
     }
 
-    public static boolean isStylusFile(String path) {
+    private static boolean isStylusFile(String path) {
         String extension = "";
 
         int i = path.lastIndexOf('.');
@@ -155,7 +155,7 @@ class TypeCheck {
             extension = path.substring(i + 1);
         }
 
-        return extension.equals("styl");
+        return extension.equals(StylusLinterFileType.STYLUS);
     }
 
     private static int remapLine(int stylusLine, Document document) {

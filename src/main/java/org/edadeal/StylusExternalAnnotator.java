@@ -73,6 +73,6 @@ public class StylusExternalAnnotator extends ExternalAnnotator<StylusExternalAnn
         }
     }
     private static boolean isStylusFile(PsiFile file) {
-        return file.getFileType().getDefaultExtension().equals("styl");
+        return file.getFileType().getDefaultExtension().equals(StylusLinterFileType.STYLUS);
     }
 }
