@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'org.edadeal'
-version '1.1.1'
+version '1.2.3'
 
 sourceCompatibility = 1.8
 
@@ -23,7 +23,7 @@ intellij {
 patchPluginXml {
     changeNotes """
       Add change notes here.<br>
-      <em>most HTML tags may be used</em>"""
+      """
 }
 
 group 'org.edadeal'

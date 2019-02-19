@@ -4,6 +4,7 @@ import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
+import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -11,9 +12,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 class TypeCheck {
     private static final Logger log = Logger.getInstance(TypeCheck.class);
@@ -60,8 +58,7 @@ class TypeCheck {
             return noProblems;
         }
 
-        if (!isStylusFile(path)) {
-            log.error("missing canonical path for " + file);
+        if (true || !isStylusFile(path)) {
             return noProblems;
         }
 
@@ -149,9 +146,14 @@ class TypeCheck {
     }
 
     private static boolean isStylusFile(String path) {
-        Pattern p = Pattern.compile(".styl$");
-        Matcher m = p.matcher(path);
-        return m.matches();
+        String extension = "";
+
+        int i = path.lastIndexOf('.');
+        if (i > 0) {
+            extension = path.substring(i + 1);
+        }
+
+        return extension.equals("styl");
     }
 
     private static int remapLine(int stylusLine, Document document) {
@@ -195,8 +197,7 @@ class TypeCheck {
 
     private static int run(@NotNull final String[] cmd, @NotNull final File dir, @NotNull final StringBuilder stdout, @NotNull final StringBuilder stderr, final byte[] stdin) {
         try {
-            final Process process = Runtime.getRuntime().exec(
-                    cmd, null, dir);
+            final Process process = Runtime.getRuntime().exec(cmd, null, dir);
 
             final Thread outThread = readStreamThread(stdout, process.getInputStream());
             final Thread errThread = readStreamThread(stderr, process.getErrorStream());

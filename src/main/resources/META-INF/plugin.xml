@@ -18,7 +18,9 @@
     <actions>
         <group id="StylusLinter.SampleMenu" text="Greeting" description="Greeting menu">
             <add-to-group group-id="MainMenu" anchor="last"/>
-            <action id="Myplugin.Textboxes" class="LintAction" text="Hello" description="Says hello"/>
+            <action id="StylusLinter.LintAction" class="LintAction" text="Hello" description="Says hello">
+                <keyboard-shortcut first-keystroke="control alt A" second-keystroke="C" keymap="$default"/>
+            </action>
         </group>
     </actions>
 </idea-plugin>
