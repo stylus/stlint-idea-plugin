@@ -34,7 +34,8 @@ public class Settings implements Configurable {
 
 
         pathField = new JTextField(readPath(), 100);
-        JLabel pathLabel = new JLabel("Stylus Linter executable: ");
+
+        JLabel pathLabel = new JLabel("Stylus Linter executable path: ");
         pathLabel.setLabelFor(pathField);
 
         panel.setLayout(new GridBagLayout());

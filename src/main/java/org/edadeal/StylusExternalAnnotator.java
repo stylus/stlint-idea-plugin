@@ -9,6 +9,8 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import com.intellij.lang.annotation.ExternalAnnotator;
+import org.jetbrains.plugins.stylus.psi.StylusFile;
+import org.jetbrains.plugins.stylus.StylusFileType;
 
 import java.util.Collection;
 
@@ -45,6 +47,10 @@ public class StylusExternalAnnotator extends ExternalAnnotator<StylusExternalAnn
     }
 
     public CollectedInfo collectInformation(@NotNull PsiFile file, @NotNull Editor editor, boolean hasErrors) {
+        if (!isStylusFile(file)) {
+            return null;
+        }
+
         return collectInformation(file);
     }
 
@@ -52,6 +58,11 @@ public class StylusExternalAnnotator extends ExternalAnnotator<StylusExternalAnn
      * @see ExternalAnnotator https://upsource.jetbrains.com/idea-ce/file/HEAD/platform/analysis-api/src/com/intellij/lang/annotation/ExternalAnnotator.java
      */
     public Collection<Error> doAnnotate(CollectedInfo collectedInfo) {
+        PsiFile file = collectedInfo.file;
+        if (!isStylusFile(file)) {
+            return null;
+        }
+
         log.info("running Stylus Linter external annotator for " + collectedInfo);
         return TypeCheck.errors(collectedInfo.file, collectedInfo.document);
     }
@@ -62,5 +73,8 @@ public class StylusExternalAnnotator extends ExternalAnnotator<StylusExternalAnn
         for (final Error error: annotationResult) {
             holder.createErrorAnnotation(error.range(), error.message());
         }
+    }
+    private static boolean isStylusFile(PsiFile file) {
+        return file instanceof StylusFile && file.getFileType().equals(StylusFileType.STYLUS);
     }
 }

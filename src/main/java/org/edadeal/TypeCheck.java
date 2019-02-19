@@ -178,7 +178,7 @@ class TypeCheck {
             Settings.readPath(), ""
         );
 
-        String output = result.output;
+        final String output = result.output;
 
         if (!result.isOk) {
             log.error("stylus output was empty.\nWorking directory: " + workingDir
