@@ -20,14 +20,14 @@ public class LintAction extends AnAction {
 
     public void actionPerformed(AnActionEvent e) {
         PsiFile pfile = e.getData(CommonDataKeys.PSI_FILE);
-        final File file = new File("/Users/v-chupurnov/WebstormProjects/test/stylus/src/test.styl");
+        final File file = new File("/Users/v-chupurnov/WebstormProjects/stylus-linter/test.styl");
 
         final File workingDir = file.getParentFile();
 
         StylusLinterRunner.Result result = StylusLinterRunner.runLint(
             file.getParentFile().getAbsolutePath(),
             file.getAbsolutePath(),
-            Settings.readPath(), ""
+            Settings.readPath(), "sdfdsfsdf"
         );
 
         String output = result.output;

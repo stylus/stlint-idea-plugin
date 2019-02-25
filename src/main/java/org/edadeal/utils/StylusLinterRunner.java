@@ -37,11 +37,11 @@ public final class StylusLinterRunner {
         return new StylusLinterSettings(config, cwd, path, StylusLinterExe);
     }
 
-    public static Result runLint(@NotNull String cwd, @NotNull String file, @NotNull String StylusLinterExe, @Nullable String config) {
+    public static Result runLint(@NotNull String cwd, @NotNull String file, @NotNull String StylusLinterExe, @Nullable String text) {
         Result result = new Result();
 
         try {
-            ProcessOutput out = lint(cwd, file, StylusLinterExe, config);
+            ProcessOutput out = lint(cwd, file, StylusLinterExe, text);
             result.errorOutput = out.getStderr();
 
             try {
@@ -67,7 +67,7 @@ public final class StylusLinterRunner {
     }
 
     @NotNull
-    public static ProcessOutput lint(@NotNull String cwd, @NotNull String file, @NotNull String StylusLinterExe, @Nullable String config) throws ExecutionException {
+    public static ProcessOutput lint(@NotNull String cwd, @NotNull String file, @NotNull String StylusLinterExe, @Nullable String text) throws ExecutionException {
         GeneralCommandLine commandLine = new GeneralCommandLine();
         commandLine.setWorkDirectory(cwd);
         commandLine.setExePath(StylusLinterExe);
@@ -76,9 +76,9 @@ public final class StylusLinterRunner {
         commandLine.addParameter("--reporter");
         commandLine.addParameter("StylusLinter-json-reporter");
 
-        if (StringUtils.isNotEmpty(config)) {
-            commandLine.addParameter("--config");
-            commandLine.addParameter(config);
+        if (StringUtils.isNotEmpty(text)) {
+            commandLine.addParameter("--content");
+            commandLine.addParameter(text);
         }
 
         return NodeRunner.execute(commandLine, TIME_OUT);

@@ -33,6 +33,7 @@ class TypeCheck {
             log.info("Missing document");
             return noProblems;
         }
+
         return errors(file, document);
     }
 
@@ -64,6 +65,7 @@ class TypeCheck {
         }
 
         final String dir = vparent.getCanonicalPath();
+
         if (dir == null) {
             log.error("missing canonical dir for " + file);
             return noProblems;
@@ -72,15 +74,21 @@ class TypeCheck {
         final String text = file.getText();
 
         final String stylusOutput = stylusCheck(path, text);
+
         log.debug("stylus output", stylusOutput);
 
         if (stylusOutput.isEmpty()) {
             return noProblems;
         }
 
-        final Output.Response response = Output.parse(stylusOutput);
+        Output.Response response = null;
+        try {
+            response = Output.parse(stylusOutput);
+        } catch (Exception ignored) {
+            log.error(stylusOutput);
+        }
 
-        if (response.passed) {
+        if (response == null || response.passed) {
             log.info("stylus passed");
             return noProblems;
         }
@@ -94,12 +102,14 @@ class TypeCheck {
 
         for (final Output.Error error: response.errors) {
             final ArrayList<Output.MessagePart> messageParts = error.message;
+
             if (messageParts == null || messageParts.size() == 0) {
                 log.error("stylus missing message in error " + error);
                 continue;
             }
 
             final Output.MessagePart firstPart = messageParts.get(0);
+
             if (!path.equals(firstPart.path) && !"-".equals(firstPart.path)) {
                 log.info("skip error because first message part path " + firstPart.path + " does not match file path " + path);
                 continue;
@@ -155,7 +165,7 @@ class TypeCheck {
             extension = path.substring(i + 1);
         }
 
-        return extension.equals(StylusLinterFileType.STYLUS);
+        return extension.equals("styl");
     }
 
     private static int remapLine(int stylusLine, Document document) {
@@ -175,7 +185,8 @@ class TypeCheck {
         StylusLinterRunner.Result result = StylusLinterRunner.runLint(
             workingDir.getAbsolutePath(),
             file.getAbsolutePath(),
-            Settings.readPath(), ""
+            Settings.readPath(),
+            text
         );
 
         final String output = result.output;

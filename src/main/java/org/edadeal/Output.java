@@ -11,7 +11,6 @@ class Output {
 
     static class MessagePart {
         String descr;
-        //public String level; // "error"
         String path;
         int line;
         int endline;
@@ -21,13 +20,11 @@ class Output {
 
     static class Error {
         ArrayList<MessagePart> message;
-        //public String kind; // "infer"
     }
 
     static class Response {
         boolean passed;
         ArrayList<Error> errors;
-        //public String version;
     }
 
     static @NotNull Response parse(@NotNull final String stylusOutput) {

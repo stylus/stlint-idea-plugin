@@ -62,6 +62,7 @@ public class StylusExternalAnnotator extends ExternalAnnotator<StylusExternalAnn
         }
 
         log.info("running Stylus Linter external annotator for " + collectedInfo);
+
         return TypeCheck.errors(collectedInfo.file, collectedInfo.document);
     }
 
@@ -72,7 +73,8 @@ public class StylusExternalAnnotator extends ExternalAnnotator<StylusExternalAnn
             holder.createErrorAnnotation(error.range(), error.message());
         }
     }
+
     private static boolean isStylusFile(PsiFile file) {
-        return file.getFileType().getDefaultExtension().equals(StylusLinterFileType.STYLUS);
+        return file.getFileType().getDefaultExtension().equals("styl");
     }
 }
