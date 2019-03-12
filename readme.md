@@ -1,6 +1,6 @@
-# WebStorm plugin for Stylus Linter
+# Stylus Linter plugin for Jetbrains IDE
 
 Install
 ```bash
-npm install stylus-pro stylus-linter-pro
+npm install stylus stlint
 ```

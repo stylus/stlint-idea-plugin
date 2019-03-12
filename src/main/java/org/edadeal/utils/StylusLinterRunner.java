@@ -74,7 +74,7 @@ public final class StylusLinterRunner {
 
         commandLine.addParameter(file);
         commandLine.addParameter("--reporter");
-        commandLine.addParameter("StylusLinter-json-reporter");
+        commandLine.addParameter("json");
 
         if (StringUtils.isNotEmpty(text)) {
             commandLine.addParameter("--content");

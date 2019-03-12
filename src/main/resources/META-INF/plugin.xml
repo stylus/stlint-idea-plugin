@@ -3,7 +3,7 @@
     <name>Stylus Linter</name>
     <vendor email="chupurnov@gmail.com" url="https://edadeal.ru">Yandex.Edadeal</vendor>
     <category>Web</category>
-    <description>Stylus Linter and Syntax Highligher use https://npmjs.net/stylus-linter</description>s
+    <description>Stylus Linter and Syntax Highligher use https://npmjs.net/stlint</description>s
 
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
@@ -16,6 +16,7 @@
         <applicationConfigurable instance="org.edadeal.Settings" />
     </extensions>
 
+    <!--
     <actions>
         <group id="StylusLinter.SampleMenu" text="Greeting" description="Greeting menu">
             <add-to-group group-id="MainMenu" anchor="last"/>
@@ -24,4 +25,5 @@
             </action>
         </group>
     </actions>
+    -->
 </idea-plugin>

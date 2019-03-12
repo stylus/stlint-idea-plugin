@@ -9,7 +9,7 @@ import javax.swing.*;
 
 public class StylusLinterConfigFileType extends LanguageFileType {
     static final StylusLinterConfigFileType INSTANCE = new StylusLinterConfigFileType();
-    private static final String STYLINTRC_EXT = "stylusrc";
+    private static final String STYLINTRC_EXT = "stlintrc";
     public static final String STYLINTRC = '.' + STYLINTRC_EXT;
 
     private StylusLinterConfigFileType() {
