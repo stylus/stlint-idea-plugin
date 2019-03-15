@@ -80,10 +80,13 @@ public final class NodeFinder {
         if (!parentDir.isDirectory()) {
             return Collections.emptyList();
         }
+
         File[] dirs = parentDir.listFiles((dir, name) -> NodeFinder.structureNodeVersionStr(name) != null);
+
         if (dirs == null || dirs.length == 0) {
             return Collections.emptyList();
         }
+
         Arrays.sort(dirs, (dir1, dir2) -> {
             int[] v1 = NodeFinder.structureNodeVersionStr(dir1.getName());
             int[] v2 = NodeFinder.structureNodeVersionStr(dir2.getName());
@@ -99,13 +102,16 @@ public final class NodeFinder {
             }
             return dir1.getName().compareTo(dir2.getName());
         });
+
         List<File> interpreters = ContainerUtil.newArrayListWithCapacity(dirs.length);
+
         for (File dir : dirs) {
             File interpreter = new File(dir, "bin" + File.separator + exeFileName);
             if (interpreter.isFile() && interpreter.canExecute()) {
                 interpreters.add(interpreter);
             }
         }
+
         return interpreters;
     }
 

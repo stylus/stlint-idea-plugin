@@ -68,8 +68,8 @@ public class Settings implements Configurable {
         }
     }
 
-    private static String KEY = "org.edadeal.stylus.path";
-    private static String DEFAULT = "/usr/local/bin/stylus-linter";
+    private static String KEY = "org.edadeal.stlint.path";
+    private static String DEFAULT = "/usr/local/bin/stlint";
 
     private static void writePath(String path) {
         PropertiesComponent props = PropertiesComponent.getInstance();

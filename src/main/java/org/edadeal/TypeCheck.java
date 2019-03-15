@@ -3,9 +3,11 @@ package org.edadeal;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
+import org.edadeal.utils.StlintExeFinder;
 import org.edadeal.utils.StylusLinterRunner;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,6 +45,8 @@ class TypeCheck {
 
         final VirtualFile vfile = file.getVirtualFile();
 
+        final Project project = file.getProject();
+
         if (vfile == null) {
             log.error("missing vfile for " + file);
             return noProblems;
@@ -73,7 +77,7 @@ class TypeCheck {
 
         final String text = file.getText();
 
-        final String stylusOutput = stylusCheck(path, text);
+        final String stylusOutput = stylusCheck(project, path, text);
 
         log.debug("stylus output", stylusOutput);
 
@@ -174,7 +178,7 @@ class TypeCheck {
     }
 
     @NotNull
-    private static String stylusCheck(@NotNull final String filePath, @NotNull final String text) {
+    private static String stylusCheck(Project project, @NotNull final String filePath, @NotNull final String text) {
 
         final File file = new File(filePath);
 
@@ -182,10 +186,12 @@ class TypeCheck {
 
         log.debug("stylusCheck working directory", workingDir);
 
+        String exepath = StlintExeFinder.findPath(project);
+
         StylusLinterRunner.Result result = StylusLinterRunner.runLint(
             workingDir.getAbsolutePath(),
             file.getAbsolutePath(),
-            Settings.readPath(),
+            exepath,
             text
         );
 

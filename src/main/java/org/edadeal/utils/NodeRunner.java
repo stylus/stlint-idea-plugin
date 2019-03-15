@@ -19,8 +19,11 @@ public final class NodeRunner {
         log.info("Running node command: " + commandLine.getCommandLineString());
 
         Process process = commandLine.createProcess();
+
         OSProcessHandler processHandler = new ColoredProcessHandler(process, commandLine.getCommandLineString(), Charsets.UTF_8);
+
         final ProcessOutput output = new ProcessOutput();
+
         processHandler.addProcessListener(new ProcessAdapter() {
             public void onTextAvailable(ProcessEvent event, Key outputType) {
                 if (outputType.equals(ProcessOutputTypes.STDERR)) {
@@ -30,16 +33,20 @@ public final class NodeRunner {
                 }
             }
         });
+
         processHandler.startNotify();
+
         if (processHandler.waitFor(timeoutInMilliseconds)) {
             output.setExitCode(process.exitValue());
         } else {
             processHandler.destroyProcess();
             output.setTimeout();
         }
+
         if (output.isTimeout()) {
             throw new ExecutionException("Command '" + commandLine.getCommandLineString() + "' is timed out.");
         }
+
         return output;
     }
 }
