@@ -17,8 +17,9 @@ dependencies {
 }
 
 intellij {
-    version '2018.3.4'
     pluginName 'Stylus Linter'
+    plugins 'stylus'
+    localPath ideaPath
 }
 
 publishPlugin {

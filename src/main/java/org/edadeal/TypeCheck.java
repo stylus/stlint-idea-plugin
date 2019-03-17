@@ -86,6 +86,7 @@ class TypeCheck {
         }
 
         Output.Response response = null;
+
         try {
             response = Output.parse(stylusOutput);
         } catch (Exception ignored) {
@@ -132,6 +133,7 @@ class TypeCheck {
             }
 
             final String errorMessage = errorMessageBuilder.toString();
+
             log.info("Stylus found error: " + errorMessage);
 
             for (final Output.MessagePart part: error.message) {
@@ -149,7 +151,11 @@ class TypeCheck {
 
                 log.info("Stylus error for file " + file + " at " + part.line + ":" + part.start + " to " + part.endline + ":" + part.end + " range " + TextRange.create(lineStartOffset + part.start - 1, lineEndOffset + part.end));
 
-                errors.add(new Error(errorMessage, TextRange.create(lineStartOffset + part.start - 1, lineEndOffset + part.end)));
+                errors.add(new Error(
+                    errorMessage,
+                    TextRange.create(lineStartOffset + part.start - 1, lineEndOffset + part.end),
+                    (part.fix != null ? part.fix.replace : null)
+                ));
             }
         }
 

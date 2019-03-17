@@ -9,6 +9,10 @@ import org.jetbrains.annotations.NotNull;
 class Output {
     private static final Gson gson = new Gson();
 
+    static class FixPart {
+        String replace;
+     }
+
     static class MessagePart {
         String descr;
         String path;
@@ -16,6 +20,7 @@ class Output {
         int endline;
         int start;
         int end;
+        FixPart fix;
     }
 
     static class Error {
@@ -30,5 +35,4 @@ class Output {
     static @NotNull Response parse(@NotNull final String stylusOutput) {
         return gson.fromJson(stylusOutput, Response.class);
     }
-
 }

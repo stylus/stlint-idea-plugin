@@ -1,14 +1,14 @@
 package org.edadeal;
 
-import com.intellij.lang.annotation.AnnotationHolder;
+import com.intellij.lang.annotation.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
+import org.edadeal.utils.CreatePropertyQuickFix;
 import org.jetbrains.annotations.NotNull;
-import com.intellij.lang.annotation.ExternalAnnotator;
 
 import java.util.Collection;
 
@@ -70,7 +70,13 @@ public class StylusExternalAnnotator extends ExternalAnnotator<StylusExternalAnn
         log.info("applying Stylus Linter external annotator results for " + file);
 
         for (final Error error: annotationResult) {
-            holder.createErrorAnnotation(error.range(), error.message());
+            if (error.fix() != null) {
+                holder.createErrorAnnotation(error.range(), error.message()).registerFix(
+                        new CreatePropertyQuickFix(error.fix(), error.range())
+                );
+            } else {
+                holder.createErrorAnnotation(error.range(), error.message());
+            }
         }
     }
 
