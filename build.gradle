@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'org.edadeal'
-version '1.5.1'
+version '1.5.2'
 
 sourceCompatibility = 1.8
 
@@ -17,8 +17,10 @@ dependencies {
 }
 
 intellij {
+    version '2019.1'
+    updateSinceUntilBuild false
     pluginName 'Stylus Linter'
-    plugins 'stylus'
+    plugins 'stylus', 'JavaScriptLanguage'
     localPath ideaPath
 }
 

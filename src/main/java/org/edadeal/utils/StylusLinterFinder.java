@@ -11,7 +11,7 @@ import java.util.Set;
 
 public final class StylusLinterFinder {
     @NotNull
-    public static List<File> findAllStylusLinterExe() {
+    public static List<File> findAllStylusLinterExe(final File projectRoot) {
         Set<File> exes = ContainerUtil.newLinkedHashSet();
         List<File> fromPath = PathEnvironmentVariableUtil.findAllExeFilesInPath(NodeFinder.getBinName("StylusLinter"));
         exes.addAll(fromPath);

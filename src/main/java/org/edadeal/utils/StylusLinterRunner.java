@@ -4,6 +4,7 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.process.ProcessOutput;
 import com.intellij.openapi.diagnostic.Logger;
+import jdk.internal.jline.internal.Log;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -33,15 +34,21 @@ public final class StylusLinterRunner {
         public String StylusLinterExe;
     }
 
-    public static StylusLinterSettings buildSettings(@NotNull String cwd, @NotNull String path, @NotNull String StylusLinterExe, @Nullable String config) {
+    public static StylusLinterSettings buildSettings(@NotNull String cwd, @NotNull String path, String StylusLinterExe, String config) {
         return new StylusLinterSettings(config, cwd, path, StylusLinterExe);
     }
 
-    public static Result runLint(@NotNull String cwd, @NotNull String file, @NotNull String StylusLinterExe, @Nullable String text) {
+    public static Result runLint(
+            @NotNull String cwd,
+            @NotNull String file,
+            @NotNull String StylusLinterExe,
+            @Nullable String StylusLinterConfig,
+            @Nullable String content
+    ) {
         Result result = new Result();
 
         try {
-            ProcessOutput out = lint(cwd, file, StylusLinterExe, text);
+            ProcessOutput out = lint(cwd, file, StylusLinterExe, StylusLinterConfig, content);
             result.errorOutput = out.getStderr();
 
             try {
@@ -67,18 +74,31 @@ public final class StylusLinterRunner {
     }
 
     @NotNull
-    public static ProcessOutput lint(@NotNull String cwd, @NotNull String file, @NotNull String StylusLinterExe, @Nullable String text) throws ExecutionException {
+    public static ProcessOutput lint(
+            @NotNull String cwd,
+            @NotNull String file,
+            @NotNull String StylusLinterExe,
+            @Nullable String StylusLinterConfig,
+            @Nullable String content
+    ) throws ExecutionException {
         GeneralCommandLine commandLine = new GeneralCommandLine();
+
         commandLine.setWorkDirectory(cwd);
         commandLine.setExePath(StylusLinterExe);
 
         commandLine.addParameter(file);
+
         commandLine.addParameter("--reporter");
         commandLine.addParameter("json");
 
-        if (StringUtils.isNotEmpty(text)) {
+        if (StringUtils.isNotEmpty(StylusLinterConfig)) {
+            commandLine.addParameter("--config");
+            commandLine.addParameter(StylusLinterConfig);
+        }
+
+        if (StringUtils.isNotEmpty(content)) {
             commandLine.addParameter("--content");
-            commandLine.addParameter(text);
+            commandLine.addParameter(content);
         }
 
         return NodeRunner.execute(commandLine, TIME_OUT);

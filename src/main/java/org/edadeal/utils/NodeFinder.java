@@ -52,10 +52,11 @@ public final class NodeFinder {
 
     public static File resolvePath(File root, @Nullable String first, @Nullable String second, String... rest) {
         String path = buildPath(first, second, rest);
+
         return new File(root, path);
     }
 
-    public static String buildPath(@Nullable String first, @Nullable String second, String... rest) {
+    public static String buildPath(@Nullable String first, @Nullable String second, @Nullable String... rest) {
         return Joiner.on(File.separatorChar).join(first, second, (Object[]) rest);
     }
 

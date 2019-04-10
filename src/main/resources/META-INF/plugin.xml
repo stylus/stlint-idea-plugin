@@ -6,15 +6,28 @@
     <description>Stylus Linter and Syntax Highligher use https://npmjs.net/stlint</description>s
     <change-notes>First release Stylus Linter Plugin stlint package - lint Stylus files.</change-notes>
 
+    <idea-version since-build="183"/>
+
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
+    <depends>JavaScript</depends>
     <depends>org.jetbrains.plugins.stylus</depends>
 
     <extensions defaultExtensionNs="com.intellij">
         <fileTypeFactory implementation="org.edadeal.utils.StylusLinterConfigFileTypeFactory"/>
         <externalAnnotator language="Stylus" implementationClass="org.edadeal.StylusExternalAnnotator"/>
-        <applicationConfigurable instance="org.edadeal.Settings" />
+<!--        <applicationConfigurable instance="org.edadeal.Settings" />-->
+
+        <projectService serviceImplementation="org.edadeal.settings.Settings"/>
+        <projectConfigurable instance="org.edadeal.settings.STLintSettingsPage"/>
+
     </extensions>
+    <project-components>
+        <!-- Add your project components here -->
+        <component>
+            <implementation-class>org.edadeal.STLintProjectComponent</implementation-class>
+        </component>
+    </project-components>
 
     <!--
     <actions>

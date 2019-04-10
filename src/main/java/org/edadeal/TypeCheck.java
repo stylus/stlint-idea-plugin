@@ -7,6 +7,7 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
+import org.edadeal.utils.StlintConfigFinder;
 import org.edadeal.utils.StlintExeFinder;
 import org.edadeal.utils.StylusLinterRunner;
 import org.jetbrains.annotations.NotNull;
@@ -184,21 +185,28 @@ class TypeCheck {
     }
 
     @NotNull
-    private static String stylusCheck(Project project, @NotNull final String filePath, @NotNull final String text) {
+    private static String stylusCheck(
+            Project project,
+            @NotNull final String filePath,
+            @NotNull final String content
+    ) {
 
         final File file = new File(filePath);
 
         final File workingDir = file.getParentFile();
+        final String cwd = project.getBasePath() != null ? project.getBasePath() : workingDir.getAbsolutePath();
 
         log.debug("stylusCheck working directory", workingDir);
 
-        String exepath = StlintExeFinder.findPath(project);
+        String exePath = StlintExeFinder.findPath(project);
+        String configPath = StlintConfigFinder.findPath(project, workingDir);
 
         StylusLinterRunner.Result result = StylusLinterRunner.runLint(
-            workingDir.getAbsolutePath(),
+            cwd,
             file.getAbsolutePath(),
-            exepath,
-            text
+            exePath,
+            configPath,
+            content
         );
 
         final String output = result.output;

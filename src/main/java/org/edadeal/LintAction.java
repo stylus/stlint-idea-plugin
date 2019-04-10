@@ -27,7 +27,7 @@ public class LintAction extends AnAction {
         StylusLinterRunner.Result result = StylusLinterRunner.runLint(
             file.getParentFile().getAbsolutePath(),
             file.getAbsolutePath(),
-            Settings.readPath(), "sdfdsfsdf"
+            Settings.readPath(), null, null
         );
 
         String output = result.output;
