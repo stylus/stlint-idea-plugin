@@ -86,9 +86,9 @@ public class STLintSettingsPage implements Configurable {
         this.project = project;
 
 
-        //configSTLintConfigField();
+        configSTLintConfigField();
 
-//        this.stLintExeField = AutodetectLinterPackage.createNodePackageField(ContainerUtil.list(new String[]{"stlint"}), this.nodeInterpreterField, this.myConfigFileView, false);
+        this.stLintExeField = AutodetectLinterPackage.createNodePackageField(ContainerUtil.list(new String[]{"stlint"}), this.nodeInterpreterField, this.myConfigFileView, false);
 
 
 //        this.packagesNotificationPanel = new PackagesNotificationPanel();
@@ -180,28 +180,21 @@ public class STLintSettingsPage implements Configurable {
     }
 
     private void getVersion(String stExe, String cwd) {
-//        if (StringUtils.isEmpty(stExe)) {
-//            return;
-//        }
-//
-//        settings = StylusLinterRunner.buildSettings(cwd, null, stExe, null);
-//        settings.StylusLinterExe = stExe;
-//        settings.cwd = cwd;
-//
-//        try {
-//            versionLabel.setText(StylusLinterRunner.runVersion(settings));
-//        } catch (Exception e) {
-//            versionLabel.setText("error");
-//            e.printStackTrace();
-//        }
+        if (StringUtils.isEmpty(stExe)) {
+            return;
+        }
+
+        settings = StylusLinterRunner.buildSettings(cwd, null, stExe, null);
+        settings.StylusLinterExe = stExe;
+        settings.cwd = cwd;
+
+        try {
+            versionLabel.setText(StylusLinterRunner.runVersion(settings));
+        } catch (Exception e) {
+            versionLabel.setText("error");
+            e.printStackTrace();
+        }
     }
-//
-//    private static TextFieldWithHistory configWithDefaults(TextFieldWithHistoryWithBrowseButton field) {
-//        TextFieldWithHistory textFieldWithHistory = field.getChildComponent();
-//        textFieldWithHistory.setHistorySize(-1);
-//        textFieldWithHistory.setMinimumAndPreferredWidth(0);
-//        return textFieldWithHistory;
-//    }
 
     private void configSTLintConfigField() {
         TextFieldWithHistory textFieldWithHistory = stLintConfigFile.getChildComponent();
@@ -234,9 +227,9 @@ public class STLintSettingsPage implements Configurable {
     @Nullable
     @Override
     public JComponent createComponent() {
-       // loadSettings();
+        loadSettings();
 
-        //addListeners();
+        addListeners();
 
         return panel;
     }
@@ -261,8 +254,8 @@ public class STLintSettingsPage implements Configurable {
     private void saveSettings() {
         Settings settings = getSettings();
         settings.pluginEnabled = pluginEnabledCheckbox.isSelected();
-//        settings.stLintExecutable = stLintExeField.getSelected().getSystemIndependentPath();
-//        settings.nodeInterpreter = nodeInterpreterField.getInterpreter().toString();
+        settings.stLintExecutable = stLintExeField.getSelected().getSystemIndependentPath();
+        settings.nodeInterpreter = nodeInterpreterField.getInterpreter().toString();
         settings.stLintConfigFile = getLintConfigFile();
 
         settings.treatAllIssuesAsWarnings = treatAllIssuesCheckBox.isSelected();
@@ -274,7 +267,7 @@ public class STLintSettingsPage implements Configurable {
         Settings settings = getSettings();
         pluginEnabledCheckbox.setSelected(settings.pluginEnabled);
 
-//        stLintExeField.getChildComponent().setText(settings.stLintExecutable);
+
         stLintConfigFile.getChildComponent().setText(settings.stLintConfigFile);
 //        nodeInterpreterField.getChildComponent().setText(settings.nodeInterpreter);
 

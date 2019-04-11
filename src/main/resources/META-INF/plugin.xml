@@ -13,13 +13,21 @@
     <depends>JavaScript</depends>
     <depends>org.jetbrains.plugins.stylus</depends>
 
+    <resource-bundle>messages.StLintBundle</resource-bundle>
+
     <extensions defaultExtensionNs="com.intellij">
         <fileTypeFactory implementation="org.edadeal.utils.StylusLinterConfigFileTypeFactory"/>
         <externalAnnotator language="Stylus" implementationClass="org.edadeal.StylusExternalAnnotator"/>
 <!--        <applicationConfigurable instance="org.edadeal.Settings" />-->
 
-        <projectService serviceImplementation="org.edadeal.settings.Settings"/>
-        <projectConfigurable instance="org.edadeal.settings.STLintSettingsPage"/>
+<!--        <projectService serviceImplementation="org.edadeal.settings.Settings"/>-->
+<!--        <projectConfigurable instance="org.edadeal.settings.STLintSettingsPage"/>-->
+
+        <projectConfigurable id="settings.linters.stlint"
+             instance="org.edadeal.settings.StLintConfigurable"
+             key="settings.linters.stlint.configurable.name"
+             bundle="messages.StLintBundle"
+        />
 
     </extensions>
     <project-components>
