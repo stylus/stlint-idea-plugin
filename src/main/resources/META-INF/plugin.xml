@@ -30,12 +30,6 @@
         />
 
     </extensions>
-    <project-components>
-        <!-- Add your project components here -->
-        <component>
-            <implementation-class>org.edadeal.STLintProjectComponent</implementation-class>
-        </component>
-    </project-components>
 
     <!--
     <actions>
