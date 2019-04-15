@@ -5,4 +5,11 @@ Install
 npm install stylus stlint
 ```
 
-Find in plugins repository
+find the plugin in the repository
+![Plugins repository](/images/repository.png)
+
+and then set the settings
+![Stlint settings](/images/stlint-settings.png)
+
+and you can see errors in your editor
+![Stylus Error](/images/bugs.png)
