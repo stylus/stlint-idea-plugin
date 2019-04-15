@@ -10,6 +10,7 @@ public class Error {
     }
 
     private String fix = null;
+
     String fix() {
         return fix;
     }

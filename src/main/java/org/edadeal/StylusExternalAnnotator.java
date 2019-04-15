@@ -1,18 +1,28 @@
 package org.edadeal;
 
 import com.intellij.lang.annotation.*;
+import com.intellij.lang.javascript.linter.ExtendedLinterState;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
+import org.edadeal.settings.StLintState;
 import org.edadeal.utils.CreatePropertyQuickFix;
 import org.jetbrains.annotations.NotNull;
+import org.edadeal.settings.StLintConfiguration;
 
 import java.util.Collection;
 
 public class StylusExternalAnnotator extends ExternalAnnotator<StylusExternalAnnotator.CollectedInfo, Collection<Error>> {
+    private static final StylusExternalAnnotator INSTANCE_FOR_BATCH_INSPECTION = new StylusExternalAnnotator();
+
+    @NotNull
+    public static StylusExternalAnnotator getInstanceForBatchInspection() {
+        return INSTANCE_FOR_BATCH_INSPECTION;
+    }
+
     static class CollectedInfo {
         final @NotNull Document document;
         final @NotNull PsiFile file;

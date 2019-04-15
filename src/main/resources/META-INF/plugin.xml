@@ -23,13 +23,38 @@
 <!--        <projectService serviceImplementation="org.edadeal.settings.Settings"/>-->
 <!--        <projectConfigurable instance="org.edadeal.settings.STLintSettingsPage"/>-->
 
-        <projectConfigurable id="settings.linters.stlint"
-             instance="org.edadeal.settings.StLintConfigurable"
-             key="settings.linters.stlint.configurable.name"
-             bundle="messages.StLintBundle"
+        <projectConfigurable
+            id="settings.javascript.linters.stlint"
+            instance="org.edadeal.settings.StLintConfigurable"
+            key="settings.javascript.linters.stlint.configurable.name"
+            bundle="messages.StLintBundle"
         />
+        <projectService serviceImplementation="org.edadeal.settings.StLintConfiguration"/>
+        <registryKey
+                description="Enable STLint support for multiple instances in one project"
+                key="stlint.enable.multiroot"
+                defaultValue="true"
+        />
+        <JavaScript.linter.descriptor implementation="org.edadeal.settings.StLintDescriptor"/>
 
+        <localInspection
+            language="Stylus"
+            groupPath="Stylus"
+            shortName="StLint"
+            enabledByDefault="true"
+            level="ERROR"
+            bundle="messages.StLintBundle"
+            implementationClass="org.edadeal.StLintInspection"
+            displayName="Stylus Linter"
+            groupKey="stlint.inspection.group.name"
+        />
     </extensions>
+
+    <project-components>
+        <component>
+            <implementation-class>org.edadeal.StLintProjectComponent</implementation-class>
+        </component>
+    </project-components>
 
     <!--
     <actions>

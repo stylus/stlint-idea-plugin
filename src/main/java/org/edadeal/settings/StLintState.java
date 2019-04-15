@@ -17,15 +17,13 @@ public class StLintState implements JSNpmLinterState<StLintState> {
     @Nullable
     private final String myCustomConfigFilePath;
     private final boolean myCustomConfigFileUsed;
-    @Nullable
-    private final String myRulesDirectory;
 
-    private StLintState(@NotNull NodeJsInterpreterRef nodePath, @NotNull NodePackageRef nodePackageRef, boolean customConfigFileUsed, @Nullable String customConfigFilePath, @Nullable String rulesDirectory) {
+
+    private StLintState(@NotNull NodeJsInterpreterRef nodePath, @NotNull NodePackageRef nodePackageRef, boolean customConfigFileUsed, @Nullable String customConfigFilePath) {
         super();
         this.myCustomConfigFileUsed = customConfigFileUsed;
         this.myCustomConfigFilePath = customConfigFilePath;
         this.myInterpreterRef = nodePath;
-        this.myRulesDirectory = rulesDirectory;
         this.myNodePackageRef = nodePackageRef;
     }
 
@@ -45,10 +43,6 @@ public class StLintState implements JSNpmLinterState<StLintState> {
         return var10000;
     }
 
-    @Nullable
-    public String getRulesDirectory() {
-        return this.myRulesDirectory;
-    }
 
     @NotNull
     public NodePackageRef getNodePackageRef() {
@@ -64,7 +58,7 @@ public class StLintState implements JSNpmLinterState<StLintState> {
     }
 
     public StLintState withInterpreterRef(NodeJsInterpreterRef ref) {
-        return new StLintState(ref, this.myNodePackageRef, this.myCustomConfigFileUsed, this.myCustomConfigFilePath, this.myRulesDirectory);
+        return new StLintState(ref, this.myNodePackageRef, this.myCustomConfigFileUsed, this.myCustomConfigFilePath);
     }
 
     public StLintState.Builder builder() {
@@ -84,12 +78,10 @@ public class StLintState implements JSNpmLinterState<StLintState> {
                 return false;
             } else if (!Objects.equals(this.myCustomConfigFilePath, state.myCustomConfigFilePath)) {
                 return false;
-            } else {
-                return Objects.equals(this.myRulesDirectory, state.myRulesDirectory);
             }
-        } else {
-            return false;
         }
+
+        return false;
     }
 
     public int hashCode() {
@@ -97,12 +89,11 @@ public class StLintState implements JSNpmLinterState<StLintState> {
         result = 31 * result + this.myNodePackageRef.hashCode();
         result = 31 * result + (this.myCustomConfigFilePath != null ? this.myCustomConfigFilePath.hashCode() : 0);
         result = 31 * result + (this.myCustomConfigFileUsed ? 1 : 0);
-        result = 31 * result + (this.myRulesDirectory != null ? this.myRulesDirectory.hashCode() : 0);
         return result;
     }
 
     public String toString() {
-        return "StLintState{myInterpreterRef=" + this.myInterpreterRef + ", myNodePackageRef='" + this.myNodePackageRef + '\'' + ", myCustomConfigFilePath='" + this.myCustomConfigFilePath + '\'' + ", myCustomConfigFileUsed=" + this.myCustomConfigFileUsed + ", myRulesDirectory='" + this.myRulesDirectory + '\'' + '}';
+        return "StLintState{myInterpreterRef=" + this.myInterpreterRef + ", myNodePackageRef='" + this.myNodePackageRef + "', myCustomConfigFilePath='" + this.myCustomConfigFilePath + "', myCustomConfigFileUsed='" + this.myCustomConfigFileUsed + "'}";
     }
 
     public static class Builder {
@@ -110,8 +101,7 @@ public class StLintState implements JSNpmLinterState<StLintState> {
         private String myCustomConfigFilePath;
         private NodeJsInterpreterRef myInterpreterRef;
         private NodePackageRef myNodePackageRef;
-        @Nullable
-        private String myRulesDirectory;
+
 
         public Builder() {
             this.myCustomConfigFileUsed = false;
@@ -130,7 +120,6 @@ public class StLintState implements JSNpmLinterState<StLintState> {
             this.myCustomConfigFilePath = state.getCustomConfigFilePath();
             this.myInterpreterRef = state.getInterpreterRef();
             this.myNodePackageRef = state.getNodePackageRef();
-            this.myRulesDirectory = state.getRulesDirectory();
         }
 
         public StLintState.Builder setCustomConfigFileUsed(boolean customConfigFileUsed) {
@@ -153,13 +142,9 @@ public class StLintState implements JSNpmLinterState<StLintState> {
             return this;
         }
 
-        public StLintState.Builder setRulesDirectory(@Nullable String rulesDirectory) {
-            this.myRulesDirectory = rulesDirectory;
-            return this;
-        }
 
         public StLintState build() {
-            return new StLintState(this.myInterpreterRef, this.myNodePackageRef, this.myCustomConfigFileUsed, this.myCustomConfigFilePath, this.myRulesDirectory);
+            return new StLintState(this.myInterpreterRef, this.myNodePackageRef, this.myCustomConfigFileUsed, this.myCustomConfigFilePath);
         }
     }
 }

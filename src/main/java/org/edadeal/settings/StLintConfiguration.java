@@ -2,26 +2,21 @@ package org.edadeal.settings;
 
 import com.intellij.javascript.nodejs.util.JSLinterPackage;
 import com.intellij.lang.javascript.linter.JSLinterConfiguration;
-import com.intellij.lang.javascript.linter.JSLinterInspection;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
+import org.edadeal.StLintInspection;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author Irina.Chernushina on 6/3/2015.
- */
-@State(name = "StLintConfiguration", storages = @Storage("jsLinters/stlint.xml"))
+@State(name = "StLintConfiguration", storages = @Storage("stlint.xml"))
 public class StLintConfiguration extends JSLinterConfiguration<StLintState> {
-    private static final String TSLINT_ELEMENT_NAME = "stlint";
+    private static final String STLINT_ELEMENT_NAME = "stlint";
     private static final String IS_CUSTOM_CONFIG_FILE_USED_ATTRIBUTE_NAME = "use-custom-config-file";
     private static final String CUSTOM_CONFIG_FILE_PATH_ATTRIBUTE_NAME = "custom-config-file-path";
-    private static final String RULES = "rules";
-    private static final String ALLOW_JS = "allowJs";
 
     private final JSLinterPackage myPackage;
 
@@ -50,24 +45,20 @@ public class StLintConfiguration extends JSLinterConfiguration<StLintState> {
 
     @NotNull
     @Override
-    protected Class<? extends JSLinterInspection> getInspectionClass() {
-        return null;
+    protected Class getInspectionClass() {
+        return StLintInspection.class;
     }
 
     @Nullable
     @Override
     protected Element toXml(@NotNull StLintState state) {
-        final Element root = new Element(TSLINT_ELEMENT_NAME);
+        final Element root = new Element(STLINT_ELEMENT_NAME);
         if (state.isCustomConfigFileUsed()) {
             root.setAttribute(IS_CUSTOM_CONFIG_FILE_USED_ATTRIBUTE_NAME, Boolean.TRUE.toString());
         }
         final String customConfigFilePath = state.getCustomConfigFilePath();
         if (!StringUtil.isEmptyOrSpaces(customConfigFilePath)) {
             root.setAttribute(CUSTOM_CONFIG_FILE_PATH_ATTRIBUTE_NAME, FileUtil.toSystemIndependentName(customConfigFilePath));
-        }
-        final String rulesDirectory = state.getRulesDirectory();
-        if (!StringUtil.isEmptyOrSpaces(rulesDirectory)) {
-            root.setAttribute(RULES, FileUtil.toSystemIndependentName(rulesDirectory));
         }
 
         storeLinterLocalPaths(state);
@@ -78,14 +69,11 @@ public class StLintConfiguration extends JSLinterConfiguration<StLintState> {
     @Override
     protected StLintState fromXml(@NotNull Element element) {
         final StLintState.Builder builder = new StLintState.Builder();
+
         builder.setCustomConfigFileUsed(Boolean.parseBoolean(element.getAttributeValue(IS_CUSTOM_CONFIG_FILE_USED_ATTRIBUTE_NAME)));
         String customConfigFilePath = StringUtil.notNullize(element.getAttributeValue(CUSTOM_CONFIG_FILE_PATH_ATTRIBUTE_NAME));
         builder.setCustomConfigFilePath(FileUtil.toSystemDependentName(customConfigFilePath));
-        final String rulesDirectory = element.getAttributeValue(RULES);
 
-        if (!StringUtil.isEmptyOrSpaces(rulesDirectory)) {
-            builder.setRulesDirectory(rulesDirectory);
-        }
 
         restoreLinterLocalPaths(builder);
         return builder.build();

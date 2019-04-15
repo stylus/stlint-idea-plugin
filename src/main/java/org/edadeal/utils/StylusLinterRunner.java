@@ -4,19 +4,20 @@ import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.process.ProcessOutput;
 import com.intellij.openapi.diagnostic.Logger;
-import jdk.internal.jline.internal.Log;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.SystemUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
 public final class StylusLinterRunner {
     private StylusLinterRunner() {
     }
 
-    private static final Logger LOG = Logger.getInstance(StylusLinterRunner.class);
+    private static final Logger log = Logger.getInstance(StylusLinterRunner.class);
     private static final int TIME_OUT = (int) TimeUnit.SECONDS.toMillis(120L);
     private static final int FILES_NOT_FOUND = 66;
 
@@ -57,6 +58,7 @@ public final class StylusLinterRunner {
                     result.isOk = true;
                 }
             } catch (Exception e) {
+                log.error(out.getStdout());
                 result.errorOutput = out.getStdout();
             }
         } catch (Exception e) {
@@ -82,8 +84,10 @@ public final class StylusLinterRunner {
             @Nullable String content
     ) throws ExecutionException {
         GeneralCommandLine commandLine = new GeneralCommandLine();
+        commandLine
+                .withCharset(StandardCharsets.UTF_8)
+                .setWorkDirectory(cwd);
 
-        commandLine.setWorkDirectory(cwd);
         commandLine.setExePath(StylusLinterExe);
 
         commandLine.addParameter(file);
@@ -98,7 +102,20 @@ public final class StylusLinterRunner {
 
         if (StringUtils.isNotEmpty(content)) {
             commandLine.addParameter("--content");
-            commandLine.addParameter(content);
+            if (SystemUtils.IS_OS_WINDOWS) {
+                String sep = "@n@";
+
+                commandLine.addParameter(content
+                        .replaceAll("\\r\\n" ,sep)
+                        .replaceAll("\\n\\r" ,sep)
+                        .replaceAll("[\\n\\r]" ,sep)
+                );
+
+                commandLine.addParameter("--newline");
+                commandLine.addParameter(sep);
+            } else {
+                commandLine.addParameter(content);
+            }
         }
 
         return NodeRunner.execute(commandLine, TIME_OUT);
@@ -115,7 +132,7 @@ public final class StylusLinterRunner {
     @NotNull
     public static String runVersion(@NotNull StylusLinterSettings settings) throws ExecutionException {
         if (!new File(settings.StylusLinterExe).exists()) {
-            LOG.warn("Calling version with invalid StylusLinterExe exe " + settings.StylusLinterExe);
+            log.warn("Calling version with invalid StylusLinterExe exe " + settings.StylusLinterExe);
             return "";
         }
 

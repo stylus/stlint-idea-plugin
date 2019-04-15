@@ -1,19 +1,23 @@
 package org.edadeal.utils;
+import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
-import org.edadeal.Settings;
+import org.edadeal.settings.StLintConfiguration;
+import org.edadeal.settings.StLintState;
+
 import java.io.File;
 
 public class StlintExeFinder {
-    static public String findPath(Project project) {
-        String path = Settings.readPath();
+    private static final Logger log = Logger.getInstance(StlintExeFinder.class);
 
-        if (new File(path).exists()) {
-            return path;
-        }
-
-        String cwd = project.getBasePath();
-
-        File exe = NodeFinder.resolvePath(new File(cwd), "node_modules", ".bin", NodeFinder.getBinName("stlint"));
+    static public String getPath(Project project) {
+        StLintState state = StLintConfiguration.getInstance(project).getExtendedState().getState();
+        String packagePath = state.getNodePackageRef().getConstantPackage().getSystemDependentPath();
+        File packageFile = new File(packagePath);
+        File exe = NodeFinder.resolvePath(
+                packageFile.getParentFile().getAbsoluteFile(),
+                ".bin",
+                NodeFinder.getBinName("stlint")
+        );
 
         if (exe.exists()) {
             return exe.getAbsolutePath();

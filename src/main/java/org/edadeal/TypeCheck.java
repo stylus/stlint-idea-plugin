@@ -7,12 +7,15 @@ import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
+import org.edadeal.settings.StLintConfiguration;
+import org.edadeal.settings.StLintState;
 import org.edadeal.utils.StlintConfigFinder;
 import org.edadeal.utils.StlintExeFinder;
 import org.edadeal.utils.StylusLinterRunner;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -116,7 +119,8 @@ class TypeCheck {
 
             final Output.MessagePart firstPart = messageParts.get(0);
 
-            if (!path.equals(firstPart.path) && !"-".equals(firstPart.path)) {
+
+            if (!arePathEqual(path, firstPart.path)) {
                 log.info("skip error because first message part path " + firstPart.path + " does not match file path " + path);
                 continue;
             }
@@ -142,7 +146,7 @@ class TypeCheck {
                     // skip part of error message that has no file/line reference
                     continue;
                 }
-                if (!path.equals(part.path) && !"-".equals(part.path)) {
+                if (!arePathEqual(path, part.path)) {
                     // skip part of error message that refers to content in another file
                     continue;
                 }
@@ -166,6 +170,13 @@ class TypeCheck {
             log.info("Stylus inspector found errors " + errors);
             return errors;
         }
+    }
+
+    private static boolean arePathEqual(String path1, String path2) {
+        String nPath1 = Paths.get(path1).toAbsolutePath().toString();
+        String nPath2 = Paths.get(path2).toAbsolutePath().toString();
+
+        return nPath1.equals(nPath2) || "-".equals(nPath2);
     }
 
     private static boolean isStylusFile(String path) {
@@ -198,8 +209,13 @@ class TypeCheck {
 
         log.debug("stylusCheck working directory", workingDir);
 
-        String exePath = StlintExeFinder.findPath(project);
-        String configPath = StlintConfigFinder.findPath(project, workingDir);
+
+        StLintState state = StLintConfiguration.getInstance(project).getExtendedState().getState();
+
+
+        String exePath = StlintExeFinder.getPath(project);
+
+        String configPath = !state.getCustomConfigFilePath().isEmpty() ? state.getCustomConfigFilePath() : StlintConfigFinder.findPath(project, workingDir);
 
         StylusLinterRunner.Result result = StylusLinterRunner.runLint(
             cwd,

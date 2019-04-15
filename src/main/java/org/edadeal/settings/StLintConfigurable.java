@@ -1,7 +1,6 @@
 package org.edadeal.settings;
 
 import com.intellij.javascript.nodejs.interpreter.NodeJsInterpreterRef;
-import com.intellij.javascript.nodejs.util.NodePackage;
 import com.intellij.lang.javascript.linter.AutodetectLinterPackage;
 import com.intellij.lang.javascript.linter.JSLinterConfigurable;
 import com.intellij.lang.javascript.linter.JSLinterView;
@@ -15,11 +14,9 @@ import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * @author Irina.Chernushina on 6/3/2015.
- */
+
 public class StLintConfigurable extends JSLinterConfigurable<StLintState> {
-    @NonNls public static final String SETTINGS_JAVA_SCRIPT_LINTERS_STLINT = "settings.linters.stlint";
+    @NonNls public static final String SETTINGS_JAVA_SCRIPT_LINTERS_STLINT = "settings.javascript.linters.stlint";
 
     public StLintConfigurable(@NotNull Project project) {
         super(project, StLintConfiguration.class, false);
@@ -44,19 +41,12 @@ public class StLintConfigurable extends JSLinterConfigurable<StLintState> {
     @Nls
     @Override
     public String getDisplayName() {
-        return StLintBundle.message("settings.javascript.linters.tslint.configurable.name");
+        return StLintBundle.message("settings.javascript.linters.stlint.configurable.name");
     }
 
     @Override
     public void apply() throws ConfigurationException {
         super.apply();
-        final StLintState state = getExtendedState(StLintConfiguration.class).getState();
-        NodePackage nodePackage = state.getNodePackageRef().getConstantPackage();
-        if (nodePackage != null && !nodePackage.isEmptyPath()) {
-            if (!checkPackageVersionForJs(nodePackage.getVersion())) {
-                throw new ConfigurationException("Linting JavaScript is not supported for this version of TSLint.");
-            }
-        }
     }
 
     private static boolean checkPackageVersionForJs(@Nullable SemVer semVer) {
@@ -68,7 +58,7 @@ public class StLintConfigurable extends JSLinterConfigurable<StLintState> {
         private final StLintPanel myPanel;
 
         NewStLintView(Project project, String displayName, StLintPanel panel) {
-            super(project, displayName, panel.createComponent(), "tslint.json");
+            super(project, displayName, panel.createComponent(), "stlint.json");
             myPanel = panel;
         }
 

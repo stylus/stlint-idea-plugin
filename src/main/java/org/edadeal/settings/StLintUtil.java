@@ -20,7 +20,10 @@ public class StLintUtil {
     public static final String PACKAGE_NAME = "stlint";
     public static final String STLINT_JSON = "stlint.json";
 
-    public static final String[] CONFIG_FILE_NAMES = new String[]{STLINT_JSON, "stlint.yaml", "stlint.yml"};
+    public static final String TYPESCRIPT_PLUGIN_OLD_PACKAGE_NAME = "stlint-language-service";
+    public static final String TYPESCRIPT_PLUGIN_PACKAGE_NAME = "stlint";
+
+    public static final String[] CONFIG_FILE_NAMES = new String[]{STLINT_JSON, ".stlintrc", "stlint.yaml", "stlint.yml"};
 
     public static boolean isConfigFile(@NotNull VirtualFile file) {
         if (!file.isValid() || file.isDirectory()) {

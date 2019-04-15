@@ -6,7 +6,9 @@ import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.process.*;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Key;
+import org.apache.commons.lang.SystemUtils;
 import org.jetbrains.annotations.NotNull;
+
 
 public final class NodeRunner {
     private NodeRunner() {
@@ -16,11 +18,13 @@ public final class NodeRunner {
 
     @NotNull
     public static ProcessOutput execute(@NotNull GeneralCommandLine commandLine, int timeoutInMilliseconds) throws ExecutionException {
-        log.info("Running node command: " + commandLine.getCommandLineString());
+        String command = commandLine.getCommandLineString();
+
+        log.info("Running node command: " + command);
 
         Process process = commandLine.createProcess();
 
-        OSProcessHandler processHandler = new ColoredProcessHandler(process, commandLine.getCommandLineString(), Charsets.UTF_8);
+        OSProcessHandler processHandler = new ColoredProcessHandler(process, command, Charsets.UTF_8);
 
         final ProcessOutput output = new ProcessOutput();
 

@@ -4,3 +4,5 @@ Install
 ```bash
 npm install stylus stlint
 ```
+
+Find in plugins repository
