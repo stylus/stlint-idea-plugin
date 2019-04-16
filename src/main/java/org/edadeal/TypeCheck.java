@@ -1,10 +1,12 @@
 package org.edadeal;
 
+import com.intellij.lang.javascript.linter.JSLinterUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
+import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import org.edadeal.settings.StLintConfiguration;
@@ -51,6 +53,10 @@ class TypeCheck {
 
         final Project project = file.getProject();
 
+        if (!StLintConfiguration.getInstance(project).isEnabled()) {
+            return noProblems;
+        }
+
         if (vfile == null) {
             log.error("missing vfile for " + file);
             return noProblems;
@@ -81,7 +87,14 @@ class TypeCheck {
 
         final String text = file.getText();
 
-        final String stylusOutput = stylusCheck(project, path, text);
+        String exePath = StlintExeFinder.getPath(project, getState(project));
+
+        if (exePath == null || exePath.isEmpty()) {
+            log.error("StLint not installed");
+            return noProblems;
+        }
+
+        final String stylusOutput = stylusCheck(project, exePath, path, text);
 
         log.debug("stylus output", stylusOutput);
 
@@ -195,9 +208,14 @@ class TypeCheck {
         return Math.max(0, Math.min(lineIndex, document.getLineCount() - 1));
     }
 
+    private static StLintState getState(Project project) {
+        return StLintConfiguration.getInstance(project).getExtendedState().getState();
+    }
+
     @NotNull
     private static String stylusCheck(
             Project project,
+            @NotNull final String exePath,
             @NotNull final String filePath,
             @NotNull final String content
     ) {
@@ -209,11 +227,8 @@ class TypeCheck {
 
         log.debug("stylusCheck working directory", workingDir);
 
+        StLintState state = getState(project);
 
-        StLintState state = StLintConfiguration.getInstance(project).getExtendedState().getState();
-
-
-        String exePath = StlintExeFinder.getPath(project);
 
         String configPath = !state.getCustomConfigFilePath().isEmpty() ? state.getCustomConfigFilePath() : StlintConfigFinder.findPath(project, workingDir);
 
