@@ -6,7 +6,7 @@
     <description>Stylus Linter and Syntax Highligher use https://npmjs.net/stlint</description>s
     <change-notes>First release Stylus Linter Plugin stlint package - lint Stylus files.</change-notes>
 
-    <idea-version since-build="183"/>
+    <idea-version since-build="193"/>
 
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
@@ -16,37 +16,44 @@
     <resource-bundle>messages.StLintBundle</resource-bundle>
 
     <extensions defaultExtensionNs="com.intellij">
-        <fileTypeFactory implementation="org.edadeal.utils.StylusLinterConfigFileTypeFactory"/>
-        <externalAnnotator language="Stylus" implementationClass="org.edadeal.StylusExternalAnnotator"/>
-<!--        <applicationConfigurable instance="org.edadeal.Settings" />-->
 
-<!--        <projectService serviceImplementation="org.edadeal.settings.Settings"/>-->
-<!--        <projectConfigurable instance="org.edadeal.settings.STLintSettingsPage"/>-->
+        <completion.contributor
+                language="any"
+                implementationClass="org.edadeal.StLintModuleCompletionContributor"
+        />
+
+        <externalAnnotator
+                language="Stylus"
+                implementationClass="org.edadeal.StylusExternalAnnotator"
+        />
 
         <projectConfigurable
-            id="settings.javascript.linters.stlint"
-            instance="org.edadeal.settings.StLintConfigurable"
-            key="settings.javascript.linters.stlint.configurable.name"
-            bundle="messages.StLintBundle"
+                id="settings.javascript.linters.stlint"
+                instance="org.edadeal.settings.StLintConfigurable"
+                key="settings.javascript.linters.stlint.configurable.name"
+                bundle="messages.StLintBundle"
         />
+
         <projectService serviceImplementation="org.edadeal.settings.StLintConfiguration"/>
+
         <registryKey
                 description="Enable STLint support for multiple instances in one project"
                 key="stlint.enable.multiroot"
                 defaultValue="true"
         />
+
         <JavaScript.linter.descriptor implementation="org.edadeal.settings.StLintDescriptor"/>
 
         <localInspection
-            language="Stylus"
-            groupPath="Stylus"
-            shortName="StLint"
-            enabledByDefault="true"
-            level="ERROR"
-            bundle="messages.StLintBundle"
-            implementationClass="org.edadeal.StLintInspection"
-            displayName="Stylus Linter"
-            groupKey="stlint.inspection.group.name"
+                language="Stylus"
+                groupPath="Stylus"
+                shortName="StLint"
+                enabledByDefault="true"
+                level="ERROR"
+                bundle="messages.StLintBundle"
+                implementationClass="org.edadeal.StLintInspection"
+                displayName="Stylus linter"
+                groupKey="stlint.inspection.group.name"
         />
     </extensions>
 

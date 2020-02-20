@@ -8,7 +8,6 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 
 public class StylusLinterConfigFileType extends LanguageFileType {
-    static final StylusLinterConfigFileType INSTANCE = new StylusLinterConfigFileType();
     private static final String STYLINTRC_EXT = "stlintrc";
     public static final String STYLINTRC = '.' + STYLINTRC_EXT;
 
@@ -33,6 +32,7 @@ public class StylusLinterConfigFileType extends LanguageFileType {
 
     @NotNull
     public Icon getIcon() {
+        assert StylusLinterIcons.ICON != null;
         return StylusLinterIcons.ICON;
     }
 }

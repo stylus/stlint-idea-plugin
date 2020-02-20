@@ -4,9 +4,7 @@ import com.google.common.base.Charsets;
 import com.intellij.execution.ExecutionException;
 import com.intellij.execution.configurations.GeneralCommandLine;
 import com.intellij.execution.process.*;
-import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.util.Key;
-import org.apache.commons.lang.SystemUtils;
 import org.jetbrains.annotations.NotNull;
 
 
@@ -14,22 +12,20 @@ public final class NodeRunner {
     private NodeRunner() {
     }
 
-    private static final Logger log = Logger.getInstance(NodeRunner.class);
-
     @NotNull
     public static ProcessOutput execute(@NotNull GeneralCommandLine commandLine, int timeoutInMilliseconds) throws ExecutionException {
         String command = commandLine.getCommandLineString();
 
-        log.info("Running node command: " + command);
+//        log.info("Running node command: " + command);
 
         Process process = commandLine.createProcess();
 
-        OSProcessHandler processHandler = new ColoredProcessHandler(process, command, Charsets.UTF_8);
+        OSProcessHandler processHandler = new OSProcessHandler(process, command, Charsets.UTF_8);
 
         final ProcessOutput output = new ProcessOutput();
 
         processHandler.addProcessListener(new ProcessAdapter() {
-            public void onTextAvailable(ProcessEvent event, Key outputType) {
+            public void onTextAvailable(@NotNull ProcessEvent event, @NotNull Key outputType) {
                 if (outputType.equals(ProcessOutputTypes.STDERR)) {
                     output.appendStderr(event.getText());
                 } else if (!outputType.equals(ProcessOutputTypes.SYSTEM)) {

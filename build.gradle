@@ -4,9 +4,7 @@ plugins {
 }
 
 group 'org.edadeal'
-version '1.5.8.91'
-
-sourceCompatibility = 1.8
+version '1.5.9'
 
 repositories {
     mavenCentral()

@@ -13,8 +13,9 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class CreatePropertyQuickFix extends BaseIntentionAction {
-    private String fix;
-    private TextRange range;
+    final private String fix;
+    final private TextRange range;
+
     public CreatePropertyQuickFix(String fix, TextRange range){
         this.fix = fix;
         this.range = range;
@@ -40,18 +41,11 @@ public class CreatePropertyQuickFix extends BaseIntentionAction {
     @Override
     public void invoke(@NotNull final Project project, final Editor editor, PsiFile file) throws
             IncorrectOperationException {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                createProperty(project, editor);
-            }
-        });
+        ApplicationManager.getApplication().invokeLater(() -> createProperty(project, editor));
     }
 
     private void createProperty(final Project project, final Editor editor) {
         final Document document = editor.getDocument();
-        WriteCommandAction.writeCommandAction(project).run(() -> {
-            document.replaceString(range.getStartOffset(), range.getEndOffset(), this.fix);
-        });
+        WriteCommandAction.writeCommandAction(project).run(() -> document.replaceString(range.getStartOffset(), range.getEndOffset(), this.fix));
     }
 }

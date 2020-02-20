@@ -8,9 +8,8 @@ import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-
+@SuppressWarnings("InspectionDescriptionNotFoundInspection")
 public class StLintInspection extends LocalInspectionTool implements BatchSuppressableTool, UnfairLocalInspectionTool {
-
     @NotNull
     public String getDisplayName() {
         return StLintBundle.message("settings.javascript.linters.stlint.configurable.name");
@@ -30,12 +29,6 @@ public class StLintInspection extends LocalInspectionTool implements BatchSuppre
     @Override
     public PsiElementVisitor buildVisitor(@NotNull ProblemsHolder holder, boolean isOnTheFly, @NotNull LocalInspectionToolSession session) {
         return new ExternalAnnotatorInspectionVisitor(holder, new StylusExternalAnnotator(), isOnTheFly);
-    }
-
-
-    @NotNull
-    public String getId() {
-        return "settings.javascript.linters.stlint";
     }
 
 

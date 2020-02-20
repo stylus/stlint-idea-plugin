@@ -5,6 +5,7 @@ import com.intellij.openapi.project.Project;
 import org.edadeal.settings.StLintState;
 
 import java.io.File;
+import java.util.Objects;
 
 public class StlintExeFinder {
     private static final Logger log = Logger.getInstance(StlintExeFinder.class);
@@ -16,15 +17,18 @@ public class StlintExeFinder {
 
         if (pack.isConstant()) {
             try {
-                packagePath = pack.getConstantPackage().getSystemDependentPath();
-            } catch (NullPointerException e) {}
+                packagePath = Objects.requireNonNull(pack.getConstantPackage()).getSystemDependentPath();
+            } catch (NullPointerException e) {
+                log.info(e);
+            }
         }
 
         if (packagePath == null || packagePath.isEmpty()) {
             File tmpDir = NodeFinder.resolvePath(
-                    new File(project.getBasePath()),
+                    new File(Objects.requireNonNull(project.getBasePath())),
                     "node_modules",
-                   "stlint"
+                   "stlint",
+                    ""
             );
 
             if (tmpDir.exists()) {
@@ -41,7 +45,8 @@ public class StlintExeFinder {
         File exe = NodeFinder.resolvePath(
                 packageFile.getParentFile().getAbsoluteFile(),
                 ".bin",
-                NodeFinder.getBinName("stlint")
+                NodeFinder.getBinName("stlint"),
+                ""
         );
 
         if (exe.exists()) {

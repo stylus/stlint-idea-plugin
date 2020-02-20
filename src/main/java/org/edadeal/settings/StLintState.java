@@ -38,17 +38,13 @@ public class StLintState implements JSNpmLinterState<StLintState> {
 
     @NotNull
     public NodeJsInterpreterRef getInterpreterRef() {
-        NodeJsInterpreterRef var10000 = this.myInterpreterRef;
-
-        return var10000;
+        return this.myInterpreterRef;
     }
 
 
     @NotNull
     public NodePackageRef getNodePackageRef() {
-        NodePackageRef var10000 = this.myNodePackageRef;
-
-        return var10000;
+        return this.myNodePackageRef;
     }
 
     public StLintState withLinterPackage(@NotNull NodePackageRef nodePackageRef) {

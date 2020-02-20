@@ -1,12 +1,9 @@
 package org.edadeal;
 
-import com.intellij.lang.javascript.linter.JSLinterUtil;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.TextRange;
-import com.intellij.openapi.util.registry.Registry;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.psi.PsiFile;
 import org.edadeal.settings.StLintConfiguration;
@@ -15,6 +12,7 @@ import org.edadeal.utils.StlintConfigFinder;
 import org.edadeal.utils.StlintExeFinder;
 import org.edadeal.utils.StylusLinterRunner;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.nio.file.Paths;
@@ -26,63 +24,66 @@ class TypeCheck {
     private static final Logger log = Logger.getInstance(TypeCheck.class);
 
     private static final Collection<Error> noProblems = Collections.emptyList();
+    private static final Collection<Suggest> noSuggest = Collections.emptyList();
 
-    static @NotNull Collection<Error> errors(@NotNull final PsiFile file) {
+    private static final class TypeDataParams {
+        final public Project project;
+        final public String exePath;
+        final public String path;
+        final public String text;
+
+        public TypeDataParams(
+                Project project,
+                String exePath,
+                String path,
+                String text
+        ) {
+            this.text = text;
+            this.path = path;
+            this.exePath = exePath;
+            this.project = project;
+        }
+    }
+
+    static @Nullable TypeDataParams checkCommon(PsiFile file) {
         final VirtualFile vfile = file.getVirtualFile();
 
         if (vfile == null) {
             log.info("Missing vfile for " + file);
-            return noProblems;
+            return null;
         }
-
-        final Document document = FileDocumentManager.getInstance().getDocument(vfile);
-
-        if (document == null) {
-            log.info("Missing document");
-            return noProblems;
-        }
-
-        return errors(file, document);
-    }
-
-    static @NotNull Collection<Error> errors(PsiFile file, Document document) {
-
-        log.debug("Stylus Linter checkFile", file);
-
-        final VirtualFile vfile = file.getVirtualFile();
 
         final Project project = file.getProject();
 
         if (!StLintConfiguration.getInstance(project).isEnabled()) {
-            return noProblems;
-        }
-
-        if (vfile == null) {
-            log.error("missing vfile for " + file);
-            return noProblems;
+            log.info("Linter is not enabled");
+            return null;
         }
 
         final VirtualFile vparent = vfile.getParent();
+
         if (vparent == null) {
-            log.error("missing vparent for " + file);
-            return noProblems;
+            log.info("missing vparent for " + file);
+            return null;
         }
 
         final String path = vfile.getCanonicalPath();
+
         if (path == null) {
-            log.error("missing canonical path for " + file);
-            return noProblems;
+            log.info("missing canonical path for " + file);
+            return null;
         }
 
-        if (!isStylusFile(path)) {
-            return noProblems;
+        if (isNotStylusFile(path)) {
+            log.info("Is nt stylus file " + path);
+            return null;
         }
 
         final String dir = vparent.getCanonicalPath();
 
         if (dir == null) {
-            log.error("missing canonical dir for " + file);
-            return noProblems;
+            log.info("missing canonical dir for " + file);
+            return null;
         }
 
         final String text = file.getText();
@@ -90,11 +91,33 @@ class TypeCheck {
         String exePath = StlintExeFinder.getPath(project, getState(project));
 
         if (exePath == null || exePath.isEmpty()) {
-            log.error("StLint not installed");
+            log.info("StLint is not installed");
+            return null;
+        }
+
+        return new TypeDataParams(project, exePath, path, text);
+    }
+
+
+    static @NotNull Collection<Error> errors(PsiFile file, Document document) {
+
+        log.info("Stylus Linter checkFile" + file);
+
+        final TypeDataParams params = checkCommon(file);
+
+        log.info("Result" + params);
+
+        if (params == null) {
             return noProblems;
         }
 
-        final String stylusOutput = stylusCheck(project, exePath, path, text);
+        final String stylusOutput = stylusCheck(
+                params.project,
+                params.exePath,
+                params.path,
+                params.text,
+                null, null, null
+        );
 
         log.debug("stylus output", stylusOutput);
 
@@ -133,8 +156,8 @@ class TypeCheck {
             final Output.MessagePart firstPart = messageParts.get(0);
 
 
-            if (!arePathEqual(path, firstPart.path)) {
-                log.info("skip error because first message part path " + firstPart.path + " does not match file path " + path);
+            if (pathIsNotEqual(params.path, firstPart.path)) {
+                log.info("skip error because first message part path " + firstPart.path + " does not match file path " + params.path);
                 continue;
             }
 
@@ -159,7 +182,7 @@ class TypeCheck {
                     // skip part of error message that has no file/line reference
                     continue;
                 }
-                if (!arePathEqual(path, part.path)) {
+                if (pathIsNotEqual(params.path, part.path)) {
                     // skip part of error message that refers to content in another file
                     continue;
                 }
@@ -185,14 +208,62 @@ class TypeCheck {
         }
     }
 
-    private static boolean arePathEqual(String path1, String path2) {
+    static @NotNull Collection<Suggest> autoCompletes(PsiFile file, Integer offset, Integer line, String text) {
+        log.info("Stylus Linter autoCompletes:" + file);
+
+        TypeDataParams params = checkCommon(file);
+
+        if (params == null) {
+            return noSuggest;
+        }
+
+        final String stylusOutput = stylusCheck(
+                params.project,
+                params.exePath,
+                params.path,
+                text,
+                "autocomplete",
+                offset,
+                line
+        );
+
+        log.info("stylus output:" + stylusOutput);
+
+        if (stylusOutput.isEmpty()) {
+            return noSuggest;
+        }
+
+        Output.Suggestions response = null;
+
+        try {
+            response = Output.parseSuggestions(stylusOutput);
+        } catch (Exception e) {
+            log.info(e);
+        }
+
+        if (response == null || response.suggests == null) {
+            return noSuggest;
+        }
+
+        final Collection<Suggest> suggestResult = new ArrayList<>();
+
+        for (final Output.Suggest suggest: response.suggests) {
+            suggestResult.add(new Suggest(
+                    suggest.title
+            ));
+        }
+
+        return suggestResult;
+    }
+
+    private static boolean pathIsNotEqual(String path1, String path2) {
         String nPath1 = Paths.get(path1).toAbsolutePath().toString();
         String nPath2 = Paths.get(path2).toAbsolutePath().toString();
 
-        return nPath1.equals(nPath2) || "-".equals(nPath2);
+        return !nPath1.equals(nPath2) && !"-".equals(nPath2);
     }
 
-    private static boolean isStylusFile(String path) {
+    public static boolean isNotStylusFile(String path) {
         String extension = "";
 
         int i = path.lastIndexOf('.');
@@ -200,7 +271,7 @@ class TypeCheck {
             extension = path.substring(i + 1);
         }
 
-        return extension.equals("styl");
+        return !extension.equals("styl");
     }
 
     private static int remapLine(int stylusLine, Document document) {
@@ -217,7 +288,10 @@ class TypeCheck {
             Project project,
             @NotNull final String exePath,
             @NotNull final String filePath,
-            @NotNull final String content
+            @NotNull final String content,
+            @Nullable final String command,
+            @Nullable final Integer offset,
+            @Nullable final Integer line
     ) {
 
         final File file = new File(filePath);
@@ -229,16 +303,30 @@ class TypeCheck {
 
         StLintState state = getState(project);
 
+        String configPath;
+        try {
+            assert state.getCustomConfigFilePath() != null;
+            configPath = !state.getCustomConfigFilePath().isEmpty() ? state.getCustomConfigFilePath() : StlintConfigFinder.findPath(project, workingDir);
+        } catch (NullPointerException e) {
+            return "";
+        }
 
-        String configPath = !state.getCustomConfigFilePath().isEmpty() ? state.getCustomConfigFilePath() : StlintConfigFinder.findPath(project, workingDir);
+        StylusLinterRunner.ExtraParams params = new StylusLinterRunner.ExtraParams();
+
+        params.command = command;
+        params.offset = offset;
+        params.line = line;
 
         StylusLinterRunner.Result result = StylusLinterRunner.runLint(
-            cwd,
-            file.getAbsolutePath(),
-            exePath,
-            configPath,
-            content
+               new StylusLinterRunner.Params(cwd,
+                       file.getAbsolutePath(),
+                       exePath,
+                       configPath,
+                       content,
+                       params
+               )
         );
+
 
         final String output = result.output;
 

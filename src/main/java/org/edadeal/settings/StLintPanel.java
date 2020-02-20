@@ -9,18 +9,17 @@ import com.intellij.lang.javascript.linter.ui.JSLinterConfigFileTexts;
 import com.intellij.lang.javascript.linter.ui.JSLinterConfigFileView;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.text.StringUtil;
-import com.intellij.util.containers.ContainerUtil;
 import com.intellij.util.ui.FormBuilder;
 import com.intellij.util.ui.SwingHelper;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import java.util.Collections;
 
 public final class StLintPanel {
     private static final JSLinterConfigFileTexts CONFIG_TEXTS = getConfigTexts();
 
-    private final Project myProject;
     private final JSLinterConfigFileView myConfigFileView;
     private final boolean myFullModeDialog;
     private final boolean myAddLeftIndent;
@@ -28,16 +27,14 @@ public final class StLintPanel {
     private final NodePackageField myNodePackageField;
 
     public StLintPanel(@NotNull Project project, boolean fullModeDialog, boolean addLeftIndent) {
-        myProject = project;
         myConfigFileView = new JSLinterConfigFileView(project, CONFIG_TEXTS, null);
         myFullModeDialog = fullModeDialog;
         myAddLeftIndent = addLeftIndent;
         myConfigFileView.setAdditionalConfigFilesProducer(() -> StLintUtil.findAllConfigsInScope(project));
         myNodeInterpreterField = new NodeJsInterpreterField(project, false);
         myNodePackageField = AutodetectLinterPackage.createNodePackageField(
-                ContainerUtil.list(StLintUtil.PACKAGE_NAME),
-                myNodeInterpreterField, myConfigFileView,
-                false
+                Collections.singletonList(StLintUtil.PACKAGE_NAME),
+                myNodeInterpreterField, myConfigFileView
         );
     }
 
@@ -82,6 +79,7 @@ public final class StLintPanel {
         if (selectedRef == AutodetectLinterPackage.INSTANCE) {
             myConfigFileView.setEnabled(false);
         }
+
         myConfigFileView.onEnabledStateChanged(enabled);
     }
 
