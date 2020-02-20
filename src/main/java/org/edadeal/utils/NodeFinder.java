@@ -2,7 +2,6 @@ package org.edadeal.utils;
 
 import com.google.common.base.Joiner;
 import com.intellij.openapi.util.SystemInfo;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 

@@ -209,7 +209,6 @@ class TypeCheck {
     }
 
     static @NotNull Collection<Suggest> autoCompletes(PsiFile file, Integer offset, Integer line, String text) {
-
         log.info("Stylus Linter autoCompletes:" + file);
 
         TypeDataParams params = checkCommon(file);

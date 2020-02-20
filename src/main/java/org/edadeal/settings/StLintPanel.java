@@ -79,6 +79,7 @@ public final class StLintPanel {
         if (selectedRef == AutodetectLinterPackage.INSTANCE) {
             myConfigFileView.setEnabled(false);
         }
+
         myConfigFileView.onEnabledStateChanged(enabled);
     }
 

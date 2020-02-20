@@ -8,6 +8,7 @@ import com.intellij.psi.PsiFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("InspectionDescriptionNotFoundInspection")
 public class StLintInspection extends LocalInspectionTool implements BatchSuppressableTool, UnfairLocalInspectionTool {
     @NotNull
     public String getDisplayName() {
