@@ -61,7 +61,7 @@ public class Settings implements Configurable {
     }
 
     @Override
-    public void apply() throws ConfigurationException {
+    public void apply() {
         if (pathField != null) {
             String path = pathField.getText();
             writePath(path);

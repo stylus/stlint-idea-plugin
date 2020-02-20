@@ -32,7 +32,15 @@ class Output {
         ArrayList<Error> errors;
     }
 
+    static class Suggestions {
+        ArrayList<Suggest> suggests;
+    }
+
     static @NotNull Response parse(@NotNull final String stylusOutput) {
         return gson.fromJson(stylusOutput, Response.class);
+    }
+
+    static @NotNull Suggestions parseSuggestions(@NotNull final String stylusOutput) {
+        return gson.fromJson(stylusOutput, Suggestions.class);
     }
 }

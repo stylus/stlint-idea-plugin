@@ -9,7 +9,6 @@ import org.apache.commons.lang.SystemUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
@@ -21,35 +20,57 @@ public final class StylusLinterRunner {
     private static final int TIME_OUT = (int) TimeUnit.SECONDS.toMillis(120L);
     private static final int FILES_NOT_FOUND = 66;
 
-    public static class StylusLinterSettings {
-        StylusLinterSettings(String config, String cwd, String targetFile, String StylusLinterExe) {
-            this.config = config;
+    public static class ExtraParams {
+        @Nullable
+        public String command;
+
+        @Nullable
+        public Integer offset;
+
+        @Nullable
+        public Integer line;
+    }
+
+    public static class Params {
+        @NotNull
+        String cwd;
+        @NotNull
+        String file;
+        @NotNull
+        String StylusLinterExe;
+        @Nullable
+        String StylusLinterConfig;
+        @Nullable
+        String content;
+        @Nullable
+        ExtraParams params;
+
+        public Params(
+                @NotNull String cwd,
+                @NotNull String file,
+                @NotNull String StylusLinterExe,
+                @Nullable String StylusLinterConfig,
+                @Nullable String content,
+                @Nullable ExtraParams params
+        ) {
             this.cwd = cwd;
-            this.targetFile = targetFile;
+            this.file = file;
             this.StylusLinterExe = StylusLinterExe;
+            this.StylusLinterConfig = StylusLinterConfig;
+            this.content = content;
+            this.params = params;
         }
-
-        public String config;
-        public String cwd;
-        String targetFile;
-        public String StylusLinterExe;
     }
 
-    public static StylusLinterSettings buildSettings(@NotNull String cwd, @NotNull String path, String StylusLinterExe, String config) {
-        return new StylusLinterSettings(config, cwd, path, StylusLinterExe);
+    public static Result runLint(@NotNull String cwd, @NotNull String file, @NotNull String StylusLinterExe) {
+        return runLint(new Params(cwd, file, StylusLinterExe, null, null, null));
     }
 
-    public static Result runLint(
-            @NotNull String cwd,
-            @NotNull String file,
-            @NotNull String StylusLinterExe,
-            @Nullable String StylusLinterConfig,
-            @Nullable String content
-    ) {
+    public static Result runLint(Params params) {
         Result result = new Result();
 
         try {
-            ProcessOutput out = lint(cwd, file, StylusLinterExe, StylusLinterConfig, content);
+            ProcessOutput out = lint(params);
             result.errorOutput = out.getStderr();
 
             try {
@@ -62,7 +83,6 @@ public final class StylusLinterRunner {
                 result.errorOutput = out.getStdout();
             }
         } catch (Exception e) {
-            e.printStackTrace();
             result.errorOutput = e.toString();
         }
 
@@ -76,80 +96,49 @@ public final class StylusLinterRunner {
     }
 
     @NotNull
-    public static ProcessOutput lint(
-            @NotNull String cwd,
-            @NotNull String file,
-            @NotNull String StylusLinterExe,
-            @Nullable String StylusLinterConfig,
-            @Nullable String content
-    ) throws ExecutionException {
+    public static ProcessOutput lint(Params params) throws ExecutionException {
         GeneralCommandLine commandLine = new GeneralCommandLine();
         commandLine
                 .withCharset(StandardCharsets.UTF_8)
-                .setWorkDirectory(cwd);
+                .setWorkDirectory(params.cwd);
 
-        commandLine.setExePath(StylusLinterExe);
+        commandLine.setExePath(params.StylusLinterExe);
 
-        commandLine.addParameter(file);
+        commandLine.addParameter(params.file);
 
         commandLine.addParameter("--reporter");
         commandLine.addParameter("json");
 
-        if (StringUtils.isNotEmpty(StylusLinterConfig)) {
+        if (StringUtils.isNotEmpty(params.StylusLinterConfig)) {
             commandLine.addParameter("--config");
-            commandLine.addParameter(StylusLinterConfig);
+            commandLine.addParameter(params.StylusLinterConfig);
         }
 
-        if (StringUtils.isNotEmpty(content)) {
+        if (StringUtils.isNotEmpty(params.content)) {
             commandLine.addParameter("--content");
             if (SystemUtils.IS_OS_WINDOWS) {
                 String sep = "@n@";
 
-                commandLine.addParameter(content
-                        .replaceAll("\\r\\n" ,sep)
-                        .replaceAll("\\n\\r" ,sep)
-                        .replaceAll("[\\n\\r]" ,sep)
+                commandLine.addParameter(params.content
+                        .replaceAll("\\r\\n", sep)
+                        .replaceAll("\\n\\r", sep)
+                        .replaceAll("[\\n\\r]", sep)
                 );
 
                 commandLine.addParameter("--newline");
                 commandLine.addParameter(sep);
             } else {
-                commandLine.addParameter(content);
+                commandLine.addParameter(params.content);
+            }
+        }
+
+        if (params.params != null) {
+            if (StringUtils.isNotEmpty(params.params.command)) {
+                commandLine.addParameter("--command");
+                commandLine.addParameter(params.params.command);
             }
         }
 
         return NodeRunner.execute(commandLine, TIME_OUT);
-    }
-
-    @NotNull
-    private static ProcessOutput version(@NotNull StylusLinterSettings settings) throws ExecutionException {
-        GeneralCommandLine commandLine = createCommandLine(settings);
-        commandLine.addParameter("-v");
-
-        return NodeRunner.execute(commandLine, TIME_OUT);
-    }
-
-    @NotNull
-    public static String runVersion(@NotNull StylusLinterSettings settings) throws ExecutionException {
-        if (!new File(settings.StylusLinterExe).exists()) {
-            log.warn("Calling version with invalid StylusLinterExe exe " + settings.StylusLinterExe);
-            return "";
-        }
-
-        ProcessOutput out = version(settings);
-        if (out.getExitCode() == 0) {
-            return out.getStdout().trim();
-        }
-
-        return "";
-    }
-
-    @NotNull
-    private static GeneralCommandLine createCommandLine(@NotNull StylusLinterSettings settings) {
-        GeneralCommandLine commandLine = new GeneralCommandLine();
-        commandLine.setWorkDirectory(settings.cwd);
-        commandLine.setExePath(settings.StylusLinterExe);
-
-        return commandLine;
     }
 }

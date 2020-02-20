@@ -40,18 +40,11 @@ public class CreatePropertyQuickFix extends BaseIntentionAction {
     @Override
     public void invoke(@NotNull final Project project, final Editor editor, PsiFile file) throws
             IncorrectOperationException {
-        ApplicationManager.getApplication().invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                createProperty(project, editor);
-            }
-        });
+        ApplicationManager.getApplication().invokeLater(() -> createProperty(project, editor));
     }
 
     private void createProperty(final Project project, final Editor editor) {
         final Document document = editor.getDocument();
-        WriteCommandAction.writeCommandAction(project).run(() -> {
-            document.replaceString(range.getStartOffset(), range.getEndOffset(), this.fix);
-        });
+        WriteCommandAction.writeCommandAction(project).run(() -> document.replaceString(range.getStartOffset(), range.getEndOffset(), this.fix));
     }
 }

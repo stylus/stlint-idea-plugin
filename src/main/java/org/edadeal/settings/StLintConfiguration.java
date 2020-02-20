@@ -2,6 +2,7 @@ package org.edadeal.settings;
 
 import com.intellij.javascript.nodejs.util.JSLinterPackage;
 import com.intellij.lang.javascript.linter.JSLinterConfiguration;
+import com.intellij.lang.javascript.linter.JSLinterInspection;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.project.Project;

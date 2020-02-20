@@ -27,16 +27,18 @@ public final class NodeFinder {
 
     @NotNull
     public static List<File> searchNodeModulesBin(String exeFileName) {
-        Set<File> interpreters = ContainerUtil.newLinkedHashSet();
+        LinkedHashSet<File> interpreters = new LinkedHashSet<File>();
         List<File> fromPath = PathEnvironmentVariableUtil.findAllExeFilesInPath(exeFileName);
         List<File> nvmInterpreters = listNodeInterpretersFromNvm(exeFileName);
         List<File> brewInterpreters = listNodeInterpretersFromHomeBrew(exeFileName);
+
         interpreters.addAll(fromPath);
         interpreters.removeAll(nvmInterpreters);
         interpreters.removeAll(brewInterpreters);
         interpreters.addAll(nvmInterpreters);
         interpreters.addAll(brewInterpreters);
-        return ContainerUtil.newArrayList(interpreters);
+
+        return new ArrayList(interpreters);
     }
 
     @NotNull

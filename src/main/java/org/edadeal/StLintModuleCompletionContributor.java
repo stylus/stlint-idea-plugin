@@ -27,7 +27,7 @@ public class StLintModuleCompletionContributor extends CompletionContributor {
                              @NotNull ProcessingContext context,
                             @NotNull CompletionResultSet resultSet
                     ) {
-                        if (!TypeCheck.isStylusFile(Objects.requireNonNull(parameters.getOriginalFile().getVirtualFile().getCanonicalPath()))) {
+                        if (TypeCheck.isNotStylusFile(Objects.requireNonNull(parameters.getOriginalFile().getVirtualFile().getCanonicalPath()))) {
                             return;
                         }
 
