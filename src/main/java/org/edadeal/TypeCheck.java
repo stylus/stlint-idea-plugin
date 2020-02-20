@@ -56,31 +56,33 @@ class TypeCheck {
         final Project project = file.getProject();
 
         if (!StLintConfiguration.getInstance(project).isEnabled()) {
+            log.info("Linter is not enabled");
             return null;
         }
 
         final VirtualFile vparent = vfile.getParent();
 
         if (vparent == null) {
-            log.error("missing vparent for " + file);
+            log.info("missing vparent for " + file);
             return null;
         }
 
         final String path = vfile.getCanonicalPath();
 
         if (path == null) {
-            log.error("missing canonical path for " + file);
+            log.info("missing canonical path for " + file);
             return null;
         }
 
         if (isNotStylusFile(path)) {
+            log.info("Is nt stylus file " + path);
             return null;
         }
 
         final String dir = vparent.getCanonicalPath();
 
         if (dir == null) {
-            log.error("missing canonical dir for " + file);
+            log.info("missing canonical dir for " + file);
             return null;
         }
 
@@ -89,7 +91,7 @@ class TypeCheck {
         String exePath = StlintExeFinder.getPath(project, getState(project));
 
         if (exePath == null || exePath.isEmpty()) {
-            log.error("StLint not installed");
+            log.info("StLint is not installed");
             return null;
         }
 
@@ -99,9 +101,11 @@ class TypeCheck {
 
     static @NotNull Collection<Error> errors(PsiFile file, Document document) {
 
-        log.debug("Stylus Linter checkFile", file);
+        log.info("Stylus Linter checkFile" + file);
 
         final TypeDataParams params = checkCommon(file);
+
+        log.info("Result" + params);
 
         if (params == null) {
             return noProblems;
@@ -206,7 +210,7 @@ class TypeCheck {
 
     static @NotNull Collection<Suggest> autoCompletes(PsiFile file, Integer offset, Integer line, String text) {
 
-        log.debug("Stylus Linter autoCompletes", file);
+        log.info("Stylus Linter autoCompletes:" + file);
 
         TypeDataParams params = checkCommon(file);
 
@@ -224,7 +228,7 @@ class TypeCheck {
                 line
         );
 
-        log.debug("stylus output", stylusOutput);
+        log.info("stylus output:" + stylusOutput);
 
         if (stylusOutput.isEmpty()) {
             return noSuggest;
@@ -234,15 +238,23 @@ class TypeCheck {
 
         try {
             response = Output.parseSuggestions(stylusOutput);
-        } catch (Exception ignored) {
-            log.error(stylusOutput);
+        } catch (Exception e) {
+            log.info(e);
         }
 
         if (response == null || response.suggests == null) {
             return noSuggest;
         }
 
-        return response.suggests;
+        final Collection<Suggest> suggestResult = new ArrayList<>();
+
+        for (final Output.Suggest suggest: response.suggests) {
+            suggestResult.add(new Suggest(
+                    suggest.title
+            ));
+        }
+
+        return suggestResult;
     }
 
     private static boolean pathIsNotEqual(String path1, String path2) {

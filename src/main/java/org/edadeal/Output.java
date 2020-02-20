@@ -23,6 +23,10 @@ class Output {
         FixPart fix;
     }
 
+    static class Suggest {
+        String title;
+    }
+
     static class Error {
         ArrayList<MessagePart> message;
     }

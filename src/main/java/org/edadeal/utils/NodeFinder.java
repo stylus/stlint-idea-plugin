@@ -8,7 +8,6 @@ import java.io.File;
 
 
 public final class NodeFinder {
-
     private NodeFinder() {
     }
 
@@ -16,14 +15,17 @@ public final class NodeFinder {
         return SystemInfo.isWindows ? baseBinName + ".cmd" : baseBinName;
     }
 
-    public static File resolvePath(File root, @Nullable String first, @Nullable String second, String... rest) {
-        String path = buildPath(first, second, rest);
+    public static File resolvePath(File root, String first, String second, String third) {
+        String path = buildPath(first, second, third);
+
+        if (path.endsWith(String.valueOf(File.separatorChar))) {
+            path = path.substring(0, path.length() - 1);
+        }
 
         return new File(root, path);
     }
 
-    public static String buildPath(@Nullable String first, @Nullable String second, @Nullable String... rest) {
-        assert rest != null;
-        return Joiner.on(File.separatorChar).join(first, second, (Object) rest);
+    public static String buildPath(String first, String second, String third) {
+        return Joiner.on(File.separatorChar).join(first, second, third);
     }
 }

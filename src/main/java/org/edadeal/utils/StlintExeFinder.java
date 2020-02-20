@@ -27,7 +27,8 @@ public class StlintExeFinder {
             File tmpDir = NodeFinder.resolvePath(
                     new File(Objects.requireNonNull(project.getBasePath())),
                     "node_modules",
-                   "stlint"
+                   "stlint",
+                    ""
             );
 
             if (tmpDir.exists()) {
@@ -44,7 +45,8 @@ public class StlintExeFinder {
         File exe = NodeFinder.resolvePath(
                 packageFile.getParentFile().getAbsoluteFile(),
                 ".bin",
-                NodeFinder.getBinName("stlint")
+                NodeFinder.getBinName("stlint"),
+                ""
         );
 
         if (exe.exists()) {

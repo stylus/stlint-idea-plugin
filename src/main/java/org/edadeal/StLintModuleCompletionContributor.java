@@ -21,10 +21,10 @@ public class StLintModuleCompletionContributor extends CompletionContributor {
     public StLintModuleCompletionContributor() {
         extend(CompletionType.BASIC,
                 psiElement(),
-                new CompletionProvider<CompletionParameters>() {
+                new CompletionProvider<>() {
                     public void addCompletions(
                             @NotNull CompletionParameters parameters,
-                             @NotNull ProcessingContext context,
+                            @NotNull ProcessingContext context,
                             @NotNull CompletionResultSet resultSet
                     ) {
                         if (TypeCheck.isNotStylusFile(Objects.requireNonNull(parameters.getOriginalFile().getVirtualFile().getCanonicalPath()))) {
@@ -39,7 +39,7 @@ public class StLintModuleCompletionContributor extends CompletionContributor {
 
                         String text = document.getText(TextRange.create(lineStartOffset, offset));
 
-                        log.info("Autocomplete: " + offset + "--" + lineStartOffset + "---" + text);
+                        log.info("Get Autocomplete for: " + offset + "--" + lineStartOffset + "---" + text);
 
                         Collection<Suggest> suggests = TypeCheck.autoCompletes(
                                 parameters.getOriginalFile(),
@@ -48,7 +48,7 @@ public class StLintModuleCompletionContributor extends CompletionContributor {
                                 text
                         );
 
-                        for (final Suggest suggest: suggests) {
+                        for (final Suggest suggest : suggests) {
                             resultSet.addElement(LookupElementBuilder.create(suggest.title));
                         }
                     }

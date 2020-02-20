@@ -12,8 +12,8 @@ import org.jetbrains.annotations.NotNull;
 public class StLintConfigurable extends JSLinterConfigurable<StLintState> {
     @NonNls public static final String SETTINGS_JAVA_SCRIPT_LINTERS_STLINT = "settings.javascript.linters.stlint";
 
-    public StLintConfigurable(@NotNull Project project, Class<? extends JSLinterConfiguration<StLintState>> configurationClass, boolean fullModeDialog) {
-        super(project, configurationClass, fullModeDialog);
+    public StLintConfigurable(@NotNull Project project) {
+        super(project, StLintConfiguration.class, false);
     }
 
     @NotNull
