@@ -33,17 +33,17 @@ public final class StylusLinterRunner {
 
     public static class Params {
         @NotNull
-        String cwd;
+        final String cwd;
         @NotNull
-        String file;
+        final String file;
         @NotNull
-        String StylusLinterExe;
+        final String StylusLinterExe;
         @Nullable
-        String StylusLinterConfig;
+        final String StylusLinterConfig;
         @Nullable
-        String content;
+        final String content;
         @Nullable
-        ExtraParams params;
+        final ExtraParams params;
 
         public Params(
                 @NotNull String cwd,

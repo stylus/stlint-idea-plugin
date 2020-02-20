@@ -27,10 +27,10 @@ class TypeCheck {
     private static final Collection<Suggest> noSuggest = Collections.emptyList();
 
     private static final class TypeDataParams {
-        public Project project;
-        public String exePath;
-        public String path;
-        public String text;
+        final public Project project;
+        final public String exePath;
+        final public String path;
+        final public String text;
 
         public TypeDataParams(
                 Project project,

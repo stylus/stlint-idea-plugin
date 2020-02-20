@@ -14,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 
 public class StylusExternalAnnotator extends ExternalAnnotator<StylusExternalAnnotator.CollectedInfo, Collection<Error>> {
-
     static class CollectedInfo {
         final @NotNull Document document;
         final @NotNull PsiFile file;

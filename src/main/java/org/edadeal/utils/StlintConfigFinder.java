@@ -14,6 +14,7 @@ public class StlintConfigFinder {
             return localConfig.getAbsolutePath();
         }
 
+        assert cwd != null;
         File globalConfig = NodeFinder.resolvePath(new File(cwd), StylusLinterConfigFileType.STYLINTRC, "");
 
         if (globalConfig.exists()) {

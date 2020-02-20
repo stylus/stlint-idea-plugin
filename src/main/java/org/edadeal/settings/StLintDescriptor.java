@@ -1,23 +1,13 @@
 package org.edadeal.settings;
 
 import com.intellij.javascript.nodejs.PackageJsonData;
-import com.intellij.lang.javascript.linter.JSLinterConfiguration;
 import com.intellij.lang.javascript.linter.JSLinterDescriptor;
-import com.intellij.lang.javascript.linter.JSLinterGuesser;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.PsiManager;
 import com.intellij.util.containers.ContainerUtil;
 import org.edadeal.StLintBundle;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
 import java.util.Collection;
-
-import static com.intellij.lang.javascript.linter.JSLinterConfigFileUtil.findDistinctConfigInContentRoots;
-
 
 public final class StLintDescriptor extends JSLinterDescriptor {
     public static final String PACKAGE_NAME = "stlint";
@@ -54,22 +44,9 @@ public final class StLintDescriptor extends JSLinterDescriptor {
         return super.enable(project, packageJsonFiles);
     }
 
-    @Override
-    public void importSettings(@NotNull Project project, @NotNull JSLinterGuesser.EnableCase enableCase) {
-        ApplicationManager.getApplication().assertIsDispatchThread();
-        VirtualFile config = findDistinctConfigInContentRoots(project, Arrays.asList(StLintUtil.CONFIG_FILE_NAMES));
-        if (config == null) return;
-
-        PsiFile file = PsiManager.getInstance(project).findFile(config);
-
-        if (file == null) {
-            return;
-        }
-    }
-
     @NotNull
     @Override
-    public Class<? extends JSLinterConfiguration> getConfigurationClass() {
+    public Class<StLintConfiguration> getConfigurationClass() {
         return StLintConfiguration.class;
     }
 }

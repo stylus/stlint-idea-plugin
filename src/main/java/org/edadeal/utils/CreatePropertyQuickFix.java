@@ -13,8 +13,9 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class CreatePropertyQuickFix extends BaseIntentionAction {
-    private String fix;
-    private TextRange range;
+    final private String fix;
+    final private TextRange range;
+
     public CreatePropertyQuickFix(String fix, TextRange range){
         this.fix = fix;
         this.range = range;

@@ -54,7 +54,7 @@
                 level="ERROR"
                 bundle="messages.StLintBundle"
                 implementationClass="org.edadeal.StLintInspection"
-                displayName="Stylus Linter"
+                displayName="Stylus linter"
                 groupKey="stlint.inspection.group.name"
         />
     </extensions>
