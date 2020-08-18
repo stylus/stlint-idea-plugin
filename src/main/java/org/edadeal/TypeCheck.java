@@ -304,6 +304,7 @@ class TypeCheck {
         StLintState state = getState(project);
 
         String configPath;
+
         try {
             assert state.getCustomConfigFilePath() != null;
             configPath = !state.getCustomConfigFilePath().isEmpty() ? state.getCustomConfigFilePath() : StlintConfigFinder.findPath(project, workingDir);

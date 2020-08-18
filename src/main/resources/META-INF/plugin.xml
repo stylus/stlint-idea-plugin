@@ -6,7 +6,7 @@
     <description>Stylus Linter and Syntax Highligher use https://npmjs.net/stlint</description>s
     <change-notes>First release Stylus Linter Plugin stlint package - lint Stylus files.</change-notes>
 
-    <idea-version since-build="193"/>
+    <idea-version since-build="202"/>
 
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>

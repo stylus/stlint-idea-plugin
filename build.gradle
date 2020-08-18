@@ -1,10 +1,17 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url 'https://dl.bintray.com/jetbrains/intellij-plugin-service' }
+    }
+}
+
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.4.16'
+    id 'org.jetbrains.intellij' version '0.4.21'
 }
 
 group 'org.edadeal'
-version '1.5.9'
+version '1.5.10'
 
 repositories {
     mavenCentral()
@@ -14,15 +21,19 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
+apply plugin: 'org.jetbrains.intellij'
+
 intellij {
-    version '2019.3'
-    updateSinceUntilBuild false
     pluginName 'Stylus Linter'
-    plugins 'stylus', 'JavaScriptLanguage'
-    localPath ideaPath
+    plugins = ['JavaScriptLanguage', 'org.jetbrains.plugins.stylus']
+    version 'IU-2020.2'
 }
 
 publishPlugin {
     token intellijPublishToken
     channels 'stable'
+}
+
+runIde {
+    ideDirectory '/Applications/WebStorm.app/Contents'
 }

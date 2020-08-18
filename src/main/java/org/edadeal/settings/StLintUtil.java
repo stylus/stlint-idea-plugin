@@ -16,7 +16,7 @@ public class StLintUtil {
     private StLintUtil() {
     }
 
-    public static final Logger LOG = Logger.getInstance("#org.edadeal.stLint");
+    public static final Logger LOG = Logger.getInstance("org.edadeal.stLint");
     public static final String PACKAGE_NAME = "stlint";
     public static final String STLINT_JSON = "stlint.json";
 
@@ -45,24 +45,5 @@ public class StLintUtil {
     @NotNull
     public static List<VirtualFile> findAllConfigsInScope(@NotNull Project project) {
         return JSLinterConfigFileUtil.findAllConfigs(project, CONFIG_FILE_NAMES);
-    }
-
-    @Nullable
-    public static VirtualFile getConfig(@NotNull StLintState state, @NotNull VirtualFile virtualFile) {
-        if (state.isCustomConfigFileUsed()) {
-            final String configFilePath = state.getCustomConfigFilePath();
-            if (StringUtil.isEmptyOrSpaces(configFilePath)) {
-                return null;
-            }
-            final File configFile = new File(configFilePath);
-            return VfsUtil.findFileByIoFile(configFile, false);
-        }
-
-        return lookupConfig(virtualFile);
-    }
-
-    @Nullable
-    public static VirtualFile lookupConfig(@NotNull VirtualFile virtualFile) {
-        return JSLinterConfigFileUtil.findFileUpToFileSystemRoot(virtualFile, CONFIG_FILE_NAMES);
     }
 }

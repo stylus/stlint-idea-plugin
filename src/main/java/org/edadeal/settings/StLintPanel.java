@@ -3,7 +3,6 @@ package org.edadeal.settings;
 import com.intellij.javascript.nodejs.interpreter.NodeJsInterpreterField;
 import com.intellij.javascript.nodejs.util.NodePackageField;
 import com.intellij.javascript.nodejs.util.NodePackageRef;
-import com.intellij.lang.javascript.JSBundle;
 import com.intellij.lang.javascript.linter.AutodetectLinterPackage;
 import com.intellij.lang.javascript.linter.ui.JSLinterConfigFileTexts;
 import com.intellij.lang.javascript.linter.ui.JSLinterConfigFileView;
@@ -12,6 +11,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.util.ui.FormBuilder;
 import com.intellij.util.ui.SwingHelper;
 import com.intellij.util.ui.UIUtil;
+import org.edadeal.StLintBundle;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -114,7 +114,7 @@ public final class StLintPanel {
 
     private static JSLinterConfigFileTexts getConfigTexts() {
         return new JSLinterConfigFileTexts(
-                JSBundle.message("javascript.linter.configurable.config.autoSearch.title"),
+                StLintBundle.message("stlint.inspection.group.name"),
                 "When linting a Stylus file, StLint looks for stlint.json or stlint.yaml " +
                         "starting from the file's folder and then moving up to the filesystem root" +
                         " or in the user's home directory.",

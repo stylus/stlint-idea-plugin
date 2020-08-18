@@ -16,8 +16,6 @@ public final class NodeRunner {
     public static ProcessOutput execute(@NotNull GeneralCommandLine commandLine, int timeoutInMilliseconds) throws ExecutionException {
         String command = commandLine.getCommandLineString();
 
-//        log.info("Running node command: " + command);
-
         Process process = commandLine.createProcess();
 
         OSProcessHandler processHandler = new OSProcessHandler(process, command, Charsets.UTF_8);
@@ -37,7 +35,7 @@ public final class NodeRunner {
         processHandler.startNotify();
 
         if (processHandler.waitFor(timeoutInMilliseconds)) {
-            output.setExitCode(process.exitValue());
+            output.setExitCode(processHandler.getExitCode());
         } else {
             processHandler.destroyProcess();
             output.setTimeout();

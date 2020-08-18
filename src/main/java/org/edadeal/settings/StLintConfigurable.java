@@ -1,7 +1,10 @@
 package org.edadeal.settings;
 
 import com.intellij.javascript.nodejs.interpreter.NodeJsInterpreterRef;
-import com.intellij.lang.javascript.linter.*;
+import com.intellij.lang.javascript.linter.AutodetectLinterPackage;
+import com.intellij.lang.javascript.linter.JSLinterConfigurable;
+import com.intellij.lang.javascript.linter.JSLinterView;
+import com.intellij.lang.javascript.linter.NewLinterView;
 import com.intellij.openapi.project.Project;
 import org.edadeal.StLintBundle;
 import org.jetbrains.annotations.Nls;

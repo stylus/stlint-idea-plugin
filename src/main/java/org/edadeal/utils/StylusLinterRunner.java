@@ -95,7 +95,7 @@ public final class StylusLinterRunner {
         public String errorOutput;
     }
 
-    @NotNull
+    @Nullable
     public static ProcessOutput lint(Params params) throws ExecutionException {
         GeneralCommandLine commandLine = new GeneralCommandLine();
         commandLine

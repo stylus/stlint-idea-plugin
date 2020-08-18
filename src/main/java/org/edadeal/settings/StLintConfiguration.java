@@ -2,17 +2,18 @@ package org.edadeal.settings;
 
 import com.intellij.javascript.nodejs.util.JSLinterPackage;
 import com.intellij.lang.javascript.linter.JSLinterConfiguration;
-import com.intellij.lang.javascript.linter.jslint.JSLintInspection;
+import com.intellij.lang.javascript.linter.JSLinterInspection;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.openapi.util.text.StringUtil;
+import org.edadeal.StLintInspection;
 import org.jdom.Element;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@State(name = "StLintConfiguration", storages = @Storage("stlint.xml"))
+@State(name = "StLintConfiguration", storages = @Storage("jsLinters/stlint.xml"))
 public class StLintConfiguration extends JSLinterConfiguration<StLintState> {
     private static final String STLINT_ELEMENT_NAME = "stlint";
     private static final String IS_CUSTOM_CONFIG_FILE_USED_ATTRIBUTE_NAME = "use-custom-config-file";
@@ -45,8 +46,8 @@ public class StLintConfiguration extends JSLinterConfiguration<StLintState> {
 
     @NotNull
     @Override
-    protected Class<? extends JSLintInspection> getInspectionClass() {
-        return JSLintInspection.class;
+    protected Class getInspectionClass() {
+        return StLintInspection.class;
     }
 
     @Nullable
