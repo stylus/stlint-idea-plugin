@@ -36,7 +36,6 @@ public final class NodeRunner {
 
         if (processHandler.waitFor(timeoutInMilliseconds)) {
             output.setExitCode(processHandler.getExitCode());
-
         } else {
             processHandler.destroyProcess();
             output.setTimeout();
