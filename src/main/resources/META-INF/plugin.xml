@@ -57,12 +57,6 @@
         />
     </extensions>
 
-    <project-components>
-        <component>
-            <implementation-class>org.edadeal.StLintProjectComponent</implementation-class>
-        </component>
-    </project-components>
-
     <!--
     <actions>
         <group id="StylusLinter.SampleMenu" text="Greeting" description="Greeting menu">
