@@ -7,18 +7,19 @@ buildscript {
 
 plugins {
     id 'java'
-    id 'org.jetbrains.intellij' version '0.4.21'
+    id 'org.jetbrains.intellij' version '0.7.2'
 }
 
 group 'org.edadeal'
-version '1.5.12'
+version '1.5.13'
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 }
 
 apply plugin: 'org.jetbrains.intellij'
@@ -26,7 +27,7 @@ apply plugin: 'org.jetbrains.intellij'
 intellij {
     pluginName 'Stylus Linter'
     plugins = ['JavaScriptLanguage', 'org.jetbrains.plugins.stylus']
-    version 'IU-2020.2'
+    version 'IU-2020.3.2'
 }
 
 publishPlugin {
