@@ -11,7 +11,7 @@ plugins {
 }
 
 group 'org.edadeal'
-version '1.5.13'
+version '1.5.14'
 
 repositories {
     mavenCentral()
@@ -27,7 +27,7 @@ apply plugin: 'org.jetbrains.intellij'
 intellij {
     pluginName 'Stylus Linter'
     plugins = ['JavaScriptLanguage', 'org.jetbrains.plugins.stylus']
-    version 'IU-2020.3.2'
+    version 'IU-2021.1'
 }
 
 publishPlugin {
