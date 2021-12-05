@@ -1,7 +1,9 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven { url 'https://dl.bintray.com/jetbrains/intellij-plugin-service' }
+        maven {
+            url "https://cache-redirector.jetbrains.com/intellij-dependencies"
+        }
     }
 }
 
@@ -15,16 +17,12 @@ version '1.5.16'
 
 repositories {
     mavenCentral()
-}
-
-jar {
-    enabled = true
+    mavenLocal()
 }
 
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
-    compileOnly "com.intellij.lang:JavaScriptLanguage"
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'
 }
 
 apply plugin: 'org.jetbrains.intellij'
@@ -32,9 +30,9 @@ apply plugin: 'org.jetbrains.intellij'
 intellij {
     pluginName = 'Stylus Linter'
     type = 'IU'
-    plugins = ['JavaScript', 'org.jetbrains.plugins.stylus']
+    plugins = ['JavaScriptLanguage', 'org.jetbrains.plugins.stylus']
     version = '2021.2.3'
-    downloadSources = true
+    downloadSources = false
 }
 
 publishPlugin {
