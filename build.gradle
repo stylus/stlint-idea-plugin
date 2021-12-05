@@ -6,35 +6,38 @@ buildscript {
 }
 
 plugins {
+    id 'org.jetbrains.intellij' version '1.3.0'
     id 'java'
-    id 'org.jetbrains.intellij' version '0.7.2'
 }
 
 group 'org.edadeal'
-version '1.5.14'
+version '1.5.16'
 
 repositories {
     mavenCentral()
 }
 
+jar {
+    enabled = true
+}
+
 dependencies {
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    compileOnly "com.intellij.lang:JavaScriptLanguage"
 }
 
 apply plugin: 'org.jetbrains.intellij'
 
 intellij {
-    pluginName 'Stylus Linter'
-    plugins = ['JavaScriptLanguage', 'org.jetbrains.plugins.stylus']
-    version 'IU-2021.1'
+    pluginName = 'Stylus Linter'
+    type = 'IU'
+    plugins = ['JavaScript', 'org.jetbrains.plugins.stylus']
+    version = '2021.2.3'
+    downloadSources = true
 }
 
 publishPlugin {
-    token intellijPublishToken
-    channels 'stable'
-}
-
-runIde {
-    ideDirectory '/Applications/WebStorm.app/Contents'
+    token = intellijPublishToken
+    channels = ['default']
 }
