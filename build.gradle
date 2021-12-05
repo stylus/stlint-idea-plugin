@@ -32,7 +32,7 @@ intellij {
     type = 'IU'
     plugins = ['JavaScriptLanguage', 'org.jetbrains.plugins.stylus']
     version = '2021.2.3'
-    downloadSources = false
+    downloadSources = true
 }
 
 publishPlugin {
