@@ -72,14 +72,14 @@ public class StylusExternalAnnotator extends ExternalAnnotator<StylusExternalAnn
 
         System.out.println("External also work stlint");
 
-        for (final Error error: annotationResult) {
+        for (final Error error : annotationResult) {
+            AnnotationBuilder builder = holder.newAnnotation(HighlightSeverity.ERROR, error.message()).range(error.range());
+
             if (error.fix() != null) {
-                holder.createErrorAnnotation(error.range(), error.message()).registerFix(
-                        new CreatePropertyQuickFix(error.fix(), error.range())
-                );
-            } else {
-                holder.createErrorAnnotation(error.range(), error.message());
+                builder = builder.newFix(new CreatePropertyQuickFix(error.fix(), error.range())).range(error.range()).registerFix();
             }
+
+            builder.create();
         }
     }
 

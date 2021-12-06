@@ -21,7 +21,7 @@ public class StLintModuleCompletionContributor extends CompletionContributor {
     public StLintModuleCompletionContributor() {
         extend(CompletionType.BASIC,
                 psiElement(),
-                new CompletionProvider<>() {
+                new CompletionProvider<CompletionParameters>() {
                     public void addCompletions(
                             @NotNull CompletionParameters parameters,
                             @NotNull ProcessingContext context,

@@ -6,7 +6,13 @@
     <description>Stylus Linter and Syntax Highligher use https://npmjs.net/stlint</description>s
     <change-notes>First release Stylus Linter Plugin stlint package - lint Stylus files.</change-notes>
 
-    <idea-version since-build="2021"/>
+    <idea-version since-build="192"/>
+
+    <change-notes>
+        ## 1.5.17
+        * Support idea 2021.3
+        * Removed deprecated API createErrorAnnotation
+    </change-notes>
 
     <depends>com.intellij.modules.platform</depends>
     <depends>com.intellij.modules.lang</depends>
@@ -17,10 +23,10 @@
 
     <extensions defaultExtensionNs="com.intellij">
 
-        <completion.contributor
+<!--        <completion.contributor
                 language="any"
                 implementationClass="org.edadeal.StLintModuleCompletionContributor"
-        />
+        />-->
 
         <externalAnnotator
                 language="Stylus"

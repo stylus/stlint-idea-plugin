@@ -13,7 +13,8 @@ plugins {
 }
 
 group 'org.edadeal'
-version '1.5.16'
+version '1.5.17'
+sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
@@ -31,11 +32,11 @@ intellij {
     pluginName = 'Stylus Linter'
     type = 'IU'
     plugins = ['JavaScriptLanguage', 'org.jetbrains.plugins.stylus']
-    version = '2021.2.3'
+    version = '2021.3'
     downloadSources = true
 }
 
 publishPlugin {
     token = intellijPublishToken
-    channels = ['default']
+    channels = ['stable']
 }
